@@ -2,26 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-class ConvNet(nn.Module):
-    def __init__(self):
-        super(ConvNet, self).__init__()
-        self.norm = nn.BatchNorm2d(64)
-        self.conv1 = nn.Conv2d(1, 64, 3, padding="same")
-        self.conv2 = nn.Conv2d(64, 64, 3, padding="same")
-        self.conv3 = nn.Conv2d(64, 64, 3, padding="same")
-        self.conv4 = nn.Conv2d(64, 64, 3, padding="same")
-        self.conv5 = nn.Conv2d(64, 64, 3, padding="same")
-        self.conv6 = nn.Conv2d(64, 1, 3, padding="same")
 
+class ConvNet(nn.Module):
+    def __init__(self, hidden_layers, filters, kernel_size):
+        super(ConvNet, self).__init__()
+        self.net = []
+        self.net.append(nn.Conv2d(1,filters,kernel_size, padding = "same"))
+        for i in range(hidden_layers):
+            self.net.append(nn.BatchNorm2d(filters))
+            self.net.append(nn.Conv2d(filters,filters,kernel_size, padding = "same"))
+            self.net.append(nn.ReLU())
+        self.net.append(nn.Conv2d(filters,1,kernel_size, padding = "same"))
+        
+        self.net = nn.Sequential(*self.net)
     def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = self.norm(x)
-        x = F.relu(self.conv2(x))
-        x = self.norm(x)
-        x = F.relu(self.conv3(x))
-        x = self.norm(x)
-        x = F.relu(self.conv4(x))
-        x = self.norm(x)
-        x = F.relu(self.conv5(x))
-        x = self.conv6(x)
-        return x
+        out = self.net(x)
+        return out
