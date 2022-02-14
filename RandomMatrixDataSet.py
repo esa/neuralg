@@ -1,5 +1,22 @@
 import torch
 import numpy as np
+
+def get_sample(matrix_parameters):
+    # Instantiate test set
+    M = RandomMatrixDataSet(N=matrix_parameters["N"], d=matrix_parameters["d"])
+
+    # If the condition number is specified
+    if "cond" in matrix_parameters:
+        M.from_condition_number(matrix_parameters["cond"])
+    # If the eigenvalues are specified
+    elif "eigenvalues" in matrix_parameters:
+        M.from_eigenvalues(eigenvalues=matrix_parameters["eigenvalues"], diagonal=matrix_parameters["diagonal"])
+    # Otherwise eigenvalues are drawn from IID normal distributions  N(mu,sigma^2)
+    else:
+        mu, sigma = matrix_parameters["mu"], matrix_parameters["sigma"]
+        M.from_eigenvalues(mu=mu, sigma=mu, similar=matrix_parameters["similar"], diagonal=matrix_parameters["diagonal"])
+    return M
+
 class RandomMatrixDataSet:
     def __init__(self, N, d=3, operation=torch.linalg.inv):
         self.N = N
@@ -7,21 +24,30 @@ class RandomMatrixDataSet:
         self.X = None
         self.Y = None
         self.operation = operation
-
+        self.cond = None
+        self.det = None
+    
+    def compute_labels(self):
+        self.Y = self.operation(self.X)
+    
     def from_condition_number(self, cond):
         self.X = SingularvalueMatrix(self.N, self.d, cond).X
-        self.Y = self.operation(self.X)
+        self.cond = cond
 
-    def from_eigenvalues(self, eigenvalues=None, mu=1, sigma=0.2, diagonal=False, similar=True, ):
+    def from_eigenvalues(self, eigenvalues=None, mu=1, sigma=0.2, diagonal=False, similar=True):
         self.X = EigenMatrix(self.N, self.d, eigenvalues, mu, sigma, diagonal, similar).X
-        self.Y = self.operation(self.X)
 
     def get_error(self, model):
         id = torch.eye(self.d)
-        return (torch.matmul(model(self.X), self.Y) - id).square().sum((2, 3)).detach().numpy()
-
-    def get_cond(self):
-        return torch.linalg.cond(self.X).detach().numpy()
+        #This could be generalized to other test errors
+        return (torch.matmul(model(self.X), self.X) - id).square().mean((2, 3)).detach().numpy()
+    
+    def compute_determinant(self):
+        self.det = torch.linalg.det(self.X)
+    
+    def compute_cond(self):
+        self.cond = torch.linalg.cond(self.X).detach().numpy()
+    
 
 
 class SingularvalueMatrix():
@@ -50,24 +76,25 @@ class SingularvalueMatrix():
 class EigenMatrix():
 
     def __init__(self, N, d=3, eigenvalues=None, mu=1, sigma=0.2, diagonal=False, triangular=False, similar=True):
-        # torch.random.seed = 101
         self.N = N
         self.d = d
         self.mu = mu
         self.sigma = sigma
         self.eigenvalues = eigenvalues
         self.X = None
+        
         if self.eigenvalues != None:
             self.matrix_from_eigenvalues(eigenvalues=self.eigenvalues, diagonal=diagonal, similar=similar)
         else:
             self.matrix_from_eigenvalues(mu=self.mu, sigma=self.sigma, diagonal=diagonal, similar=similar)
 
-    def matrix_from_eigenvalues(self, eigenvalues=None, mu=None, sigma=None, similar=True, diagonal=False):
-        # Generate N invertible matrices of dimension d
-        # Generate eigenvalues of matrices of reasonable size, close to eachother
-        # Allows specifying the eigenvalues of the matrices by passing
+    def matrix_from_eigenvalues(self, eigenvalues= None, mu=None, sigma=None, similar=True, diagonal=False):
+        #Generate N invertible matrices of dimension d. 
+        #Eigenvalues for each matrix are sampled from a d IID normal distributions with mean mu and std sigma
+        #Resulting matrices are generated via similarity transformatins using random matrices. 
+        
         if eigenvalues != None:
-            x = eig.repeat(self.N, 1)
+            x = eigenvalues.repeat(self.N, 1)
             x = x[:, :, None]
         else:
             # Set default values if not specified
@@ -75,7 +102,6 @@ class EigenMatrix():
                 mu = 1
             elif sigma == None:
                 sigma = 0.2
-
             x = mu * torch.ones((self.N, self.d, 1)) + sigma * torch.randn(self.N, self.d, 1)
 
             # Create diagonal matrices
@@ -85,11 +111,11 @@ class EigenMatrix():
             # Transformation matrix for similarity transform
             if not similar:
                 # Creates matrices with different basis.
-                M = torch.rand(self.N, 1, self.d, self.d)
+                M = torch.randn(self.N, 1, self.d, self.d)
                 X = torch.matmul(torch.matmul(M, diag), torch.linalg.inv(M))
             # Do similarity transform with same basis
             else:
-                M = torch.rand(self.d, self.d)
+                M = torch.randn(self.d, self.d)
                 X = torch.matmul(torch.matmul(M, diag), torch.linalg.inv(M))
         else:
             X = diag

@@ -48,14 +48,14 @@ class Siren(nn.Module):
                                   is_first=True, omega_0=first_omega_0))
 
         for i in range(hidden_layers):
-            self.net.append(SineLayer(hidden_features, matrix_dimension**2,
+            self.net.append(SineLayer(hidden_features, hidden_features,
                                       is_first=False, omega_0=hidden_omega_0))
 
         if outermost_linear:
             final_linear = nn.Linear(hidden_features, matrix_dimension**2)
 
             self.net.append(final_linear)
-            self.net.append(outermost_activation)
+            #self.net.append(outermost_activation)
         else:
             self.net.append(SineLayer(hidden_features, matrix_dimension**2,
                                       is_first=False, omega_0=hidden_omega_0))
