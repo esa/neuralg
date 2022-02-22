@@ -3,18 +3,35 @@ import numpy as np
 
 def get_sample(matrix_parameters):
     # Instantiate test set
-    M = RandomMatrixDataSet(N=matrix_parameters["N"], d=matrix_parameters["d"])
-
+    N,d = matrix_parameters["N"],matrix_parameters["d"]
+    M = RandomMatrixDataSet(N, d)
     # If the condition number is specified
     if "cond" in matrix_parameters:
         M.from_condition_number(matrix_parameters["cond"])
     # If the eigenvalues are specified
     elif "eigenvalues" in matrix_parameters:
         M.from_eigenvalues(eigenvalues=matrix_parameters["eigenvalues"], diagonal=matrix_parameters["diagonal"])
-    # Otherwise eigenvalues are drawn from IID normal distributions  N(mu,sigma^2)
-    else:
+    # If mu & sigma specified, eigenvalues are drawn from IID normal distributions  N(mu,sigma^2)
+    elif "mu" and "sigma" in matrix_parameters:
         mu, sigma = matrix_parameters["mu"], matrix_parameters["sigma"]
         M.from_eigenvalues(mu=mu, sigma=mu, similar=matrix_parameters["similar"], diagonal=matrix_parameters["diagonal"])
+    # Otherwise just sample a matrix with standard normal distributed elements
+    else:
+        M.from_randn()
+    #Flatten and append determinant as a feature
+    #Maybe this is not very smart, since training/testing will be restricted to this matrix type. 
+    if "det" in matrix_parameters and matrix_parameters["det"]: #This will throw an error if "det" is not specified, maybe change 
+        M.compute_determinant()
+        m = torch.flatten(M.X, start_dim = 2)
+        M.X_with_det = torch.cat((m,M.det[:,None,:]),2)
+        
+    elif "det_channel" in matrix_parameters and matrix_parameters["det_channel"]:
+        M.compute_determinant()
+        m = torch.eye(d)*M.det[:, None] #Try both det and 1/det!
+        m = m[:,None,:,:]
+        M.X_with_det = torch.cat((M.X,m),1)
+    elif "permutations" in matrix_parameters:       
+            M.permute(matrix_parameters["permutations"])                  
     return M
 
 class RandomMatrixDataSet:
@@ -26,6 +43,11 @@ class RandomMatrixDataSet:
         self.operation = operation
         self.cond = None
         self.det = None
+        self.X_with_det = None
+        self.X_with_permutations = None
+    
+    def from_randn(self):
+        self.X = torch.randn(self.N,1,self.d,self.d)
     
     def compute_labels(self):
         self.Y = self.operation(self.X)
@@ -40,7 +62,12 @@ class RandomMatrixDataSet:
     def get_error(self, model):
         id = torch.eye(self.d)
         #This could be generalized to other test errors
-        return (torch.matmul(model(self.X), self.X) - id).square().mean((2, 3)).detach().numpy()
+        if self.X_with_det is not None: 
+            return (torch.matmul(model(self.X_with_det), self.X) - id).square().mean((2, 3)).detach().numpy()
+        elif self.X_with_permutations is not None: 
+            return (torch.matmul(model(self.X_with_permutations), self.X) - id).square().mean((2, 3)).detach().numpy()
+        else:
+            return (torch.matmul(model(self.X), self.X) - id).square().mean((2, 3)).detach().numpy()
     
     def compute_determinant(self):
         self.det = torch.linalg.det(self.X)
@@ -48,6 +75,16 @@ class RandomMatrixDataSet:
     def compute_cond(self):
         self.cond = torch.linalg.cond(self.X).detach().numpy()
     
+    def permute(self,p, dim = 3):
+        x = self.X
+        x = x[:,:,:,:]
+        x_perm = x
+        for i in range(p):
+            idx = torch.randperm(x.shape[dim]) #2 for rows, 3 for columns
+            x_perm = torch.cat((x_perm,x[:,:,idx,:]),1)
+        
+        self.X_with_permutations = x_perm
+        
 
 
 class SingularvalueMatrix():
