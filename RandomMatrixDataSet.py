@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import gpytorch.utils.lanczos as lanczos
 
 def get_sample(matrix_parameters):
     # Instantiate test set
@@ -25,6 +26,9 @@ def get_sample(matrix_parameters):
         if "symmetric" in matrix_parameters: # Construct symmetric random matrix
             if matrix_parameters["symmetric"]:
                 M.X = torch.matmul(M.X,torch.transpose(M.X,2,3)) 
+        if "lanczos" in matrix_parameters:
+            if matrix_parameters["lanczos"]:
+                M.get_lanczos_tridiag()
         
     #Flatten and append determinant as a feature
     #Maybe this is not very smart, since training/testing will be restricted to this matrix type. 
@@ -53,6 +57,7 @@ class RandomMatrixDataSet:
         self.det = None
         self.X_with_det = None
         self.X_with_permutations = None
+        self.X_Hess = None
     
     def from_randn(self):
         self.X = torch.randn(self.N,1,self.d,self.d)
@@ -92,6 +97,15 @@ class RandomMatrixDataSet:
             x_perm = torch.cat((x_perm,x[:,:,idx,:]),1)
         
         self.X_with_permutations = x_perm
+    
+    def get_lanczos_tridiag(self, max_iter = 20, device = 'cpu', dtype = torch.float32):
+        matrix_shape = self.X[0,0,:,:].shape
+  
+        def matmul_closure(v):
+            return torch.matmul(self.X,v) 
+     
+        _,Hm = lanczos.lanczos_tridiag(matmul_closure, max_iter, dtype, device, matrix_shape, batch_shape=torch.Size([self.N,1]))
+        self.X = Hm
         
 
 
