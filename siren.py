@@ -34,8 +34,6 @@ class SineLayer(nn.Module):
 
     def forward(self, input):
         return torch.sin(self.omega_0 * self.linear(input))
-
-
 class Siren(nn.Module):
     def __init__(self, matrix_dimension, hidden_features, hidden_layers, outermost_linear=True, outermost_activation=nn.Tanh(),
                  first_omega_0=30, hidden_omega_0=30.):
@@ -66,4 +64,35 @@ class Siren(nn.Module):
         x = self.flatten(x)
         x = self.net(x)
         output = self.unflatten(x)
+        return output
+
+class EigSiren(nn.Module):
+    def __init__(self, matrix_dimension, hidden_features, hidden_layers, outermost_linear=True, outermost_activation=nn.Tanh(),
+                 first_omega_0=1, hidden_omega_0=1.):
+
+        super().__init__()
+        self.flatten = nn.Flatten(start_dim=2)
+        self.net = []
+        self.net.append(SineLayer(matrix_dimension**2, hidden_features,
+                                  is_first=True, omega_0=first_omega_0))
+
+        for i in range(hidden_layers):
+            self.net.append(SineLayer(hidden_features, hidden_features,
+                                      is_first=False, omega_0=hidden_omega_0))
+
+        if outermost_linear:
+            final_linear = nn.Linear(hidden_features, matrix_dimension)
+
+            self.net.append(final_linear)
+            #self.net.append(outermost_activation)
+        else:
+            self.net.append(SineLayer(hidden_features, matrix_dimension**2,
+                                      is_first=False, omega_0=hidden_omega_0))
+
+        self.net = nn.Sequential(*self.net)
+
+    def forward(self, x):
+        x = self.flatten(x)
+        x = self.net(x)
+        output = x
         return output
