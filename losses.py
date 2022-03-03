@@ -4,6 +4,7 @@ import torch
 def inv_MSE(predicted,x):
     id = torch.eye(x.shape[2])
     return (torch.matmul(predicted,x) - id).square().mean()
+
 def inv_RMSE(predicted,x):
     id = torch.eye(x.shape[2])
     return torch.sqrt(inv_MSE(predicted,x))
@@ -39,11 +40,18 @@ def frobenius(predicted,y):
     id = torch.eye(y.shape[2])
     return torch.linalg.matrix_norm(predicted-y, ord = 'fro').mean()
 
+##### For only eigenvalue problems.  
 def eigval_error(pred,x):
-    e = (pred-x).square().mean()
+    e = (pred-x).abs().mean()
     return e 
+def relative_L1_evaluation_error(pred,x):
+    return (pred-x).abs().sum(-1)/(x.abs().sum(-1))
 
+def eigval_L1(pred,x):
+    return relative_L1_evaluation_error(pred,x).mean()
 
-# Add som abs loss and relative/scaled losses
+def max_eigval_error(pred,x): 
+    return eigval_error(pred,x) #Just for the train module to know how to evaluate
+
 
 

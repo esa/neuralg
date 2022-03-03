@@ -10,14 +10,22 @@ def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
         pred = model(batch.X_with_permutations)
     else:
         pred = model(batch.X)
-    if loss_fcn == eigval_error:
+    if loss_fcn == eigval_error or loss_fcn == eigval_L1:
         batch.compute_labels()
-        max_eigvals = torch.max(torch.real(batch.Y[0]),2)[0] #Need to cast as real  
         sorted_eigvals = torch.sort(torch.real(batch.Y[0]),2)[0] #For full eigenvalue decomposition
         loss = loss_fcn(pred, sorted_eigvals)
+    elif loss_fcn == max_eigval_error: 
+        batch.compute_labels()
+        sorted_eigvals = torch.sort(torch.real(batch.Y[0]),2)[0]
+        max_eigvals = sorted_eigvals[:,:,-1].unsqueeze(1)  
+        loss = loss_fcn(pred, max_eigvals)
+    #elif loss_fcn == eig_vec_error: 
+    #    batch.compute_labels() 
+    #    eig_vecs = batch.Y[1]
     elif loss_fcn == inv_MSE or loss_fcn == inv_RMSE or loss_fcn == inv_frobenius or loss_fcn == inv_MAE or loss_fcn == relative_inv_MSE or loss_fcn == cond_scaled_inv_MSE:
         loss = loss_fcn(pred, batch.X)
     else:
+        batch.compute_labels()
         loss = loss_fcn(pred, batch.Y)
 
     # Zero the gradient
@@ -36,7 +44,8 @@ def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
     return loss
 
 
-def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None, epoch = 1):
+def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None, epoch = 1, 
+                 variable_sized_batches = True, mixed_eigval_distributions = True):
     # When a new network is created we init empty training logs
     loss_log = []
     eval_loss_log = []
@@ -50,11 +59,19 @@ def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None,
     # We sample some data to do evaluation during training
 
     eval_set = get_sample(matrix_parameters)
-  
+    
+    sizes = [5,6,7,8,9,10]
+    
+    distributions = ["gaussian","uniform","laplace"]
     for e in range(1,epoch+1):
         for i in range(k):
 
             # Sample random matrices
+            if variable_sized_batches: 
+                matrix_parameters["d"] =  np.random.choice(sizes)
+            
+            if mixed_eigval_distributions:  #Non-Wigner matrices
+                matrix_parameters["dist"] = np.random.choice(distributions)
 
             batch = get_sample(matrix_parameters)
 
@@ -74,19 +91,20 @@ def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None,
             # Update the logs
             weighted_average_log.append(np.mean(weighted_average))
             loss_log.append(loss.item())
-            if i % 100 == 0:
+            if i % 100 == 0: #This must be better generalized, will probably throw alot of errors 
                 if matrix_parameters["det"] or matrix_parameters["det_channel"] is True:
                     pred_on_eval = model(eval_set.X_with_det)
                 elif "permutations" in matrix_parameters: 
                     pred_on_eval = model(eval_set.X_with_permutations)
                 else:   
                     pred_on_eval = model(eval_set.X)
-                if loss_fcn == eigval_error:
+                if loss_fcn == eigval_error or loss_fcn == eigval_L1:
                     eval_set.compute_labels()
                     sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]),2)[0]
                     eval_loss = loss_fcn(pred_on_eval,sorted_eigvals)
                 else:
-                    eval_loss = loss_fcn(pred_on_eval, eval_set.X)
+                    eval_set.compute_labels()
+                    eval_loss = loss_fcn(pred_on_eval, eval_set.Y)
                 eval_loss_log.append(eval_loss)
  
             # Print every i iterations

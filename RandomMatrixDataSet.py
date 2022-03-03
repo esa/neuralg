@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import gpytorch.utils.lanczos as lanczos
+import math
 
 def get_sample(matrix_parameters):
     # Instantiate test set
@@ -21,11 +22,13 @@ def get_sample(matrix_parameters):
         mu, sigma = matrix_parameters["mu"], matrix_parameters["sigma"]
         M.from_eigenvalues(mu=mu, sigma=mu, similar=matrix_parameters["similar"], diagonal=matrix_parameters["diagonal"])
     # Otherwise just sample a matrix with standard normal distributed elements
+    elif "dist" in matrix_parameters:
+        M.from_dist(matrix_parameters["dist"])
     else:
-        M.from_randn()
+        M.from_rand() #M.from_randn() #fix so one can choose between these
         if "symmetric" in matrix_parameters: # Construct symmetric random matrix
-            if matrix_parameters["symmetric"]:
-                M.X = torch.matmul(M.X,torch.transpose(M.X,2,3)) 
+            if matrix_parameters["symmetric"]: #Create Wigner matrix
+                M.X = torch.triu(M.X,0) + torch.transpose(torch.triu(M.X,1),2,3)  #torch.matmul(M.X,torch.transpose(M.X,2,3)) 
         if "lanczos" in matrix_parameters:
             if matrix_parameters["lanczos"]:
                 M.get_lanczos_tridiag()
@@ -58,12 +61,21 @@ class RandomMatrixDataSet:
         self.X_with_det = None
         self.X_with_permutations = None
         self.X_Hess = None
+        
+    def from_rand(self, r1 = -10, r2 = 10): 
+        self.X = (r2-r1)*torch.rand(self.N,1,self.d,self.d)
     
     def from_randn(self):
         self.X = torch.randn(self.N,1,self.d,self.d)
     
+    def from_dist(self, dist):
+        self.X = SymmetricMatrix(self.N,self.d, dist = dist).X
+        
     def compute_labels(self):
-        self.Y = self.operation(self.X)
+        if self.operation == "lanczos":
+            self.get_lanczos_tridiag()
+        else:
+            self.Y = self.operation(self.X)
     
     def from_condition_number(self, cond):
         self.X = SingularvalueMatrix(self.N, self.d, cond).X
@@ -98,14 +110,16 @@ class RandomMatrixDataSet:
         
         self.X_with_permutations = x_perm
     
-    def get_lanczos_tridiag(self, max_iter = 20, device = 'cpu', dtype = torch.float32):
+    def get_lanczos_tridiag(self, max_iter = 10, device = 'cpu', dtype = torch.float32):
         matrix_shape = self.X[0,0,:,:].shape
-  
+        batch_shape = torch.Size([self.N,1])
+        init_vecs = torch.ones(matrix_shape[-1], 1, dtype=dtype, device=device)
+        init_vecs = init_vecs.expand(*batch_shape, matrix_shape[-1], 1)
         def matmul_closure(v):
             return torch.matmul(self.X,v) 
      
         _,Hm = lanczos.lanczos_tridiag(matmul_closure, max_iter, dtype, device, matrix_shape, batch_shape=torch.Size([self.N,1]))
-        self.X = Hm
+        self.Y = torch.cat((torch.diagonal(Hm,0,2,3),torch.diagonal(Hm,1,2,3)),2) #torch.sort(torch.linalg.eigh(Hm)[0],2)[0]  
         
 
 
@@ -131,10 +145,37 @@ class SingularvalueMatrix():
         X = torch.matmul(X, X.transpose(2, 3))
         self.X = X
 
+class SymmetricMatrix():
+    def __init__(self,N,d = 5, sigma= 10/math.sqrt(3), dist = "gaussian"):
+        self.N = N
+        self.d = d
+        self.sigma = sigma
+        self.dist = dist
+        self.X = None
+        self.from_distribution(dist = self.dist)
+    
+    def from_distribution(self, dist = "gaussian"): 
+        M = torch.randn(self.N,1,self.d,self.d)
+   
+        #Create symmetric matrices 
+        M = torch.triu(M,0) + torch.transpose(torch.triu(M,1),2,3)  
+        #Compute eigenvectors
+        P = torch.linalg.eigh(M)[1]
+        #Sample new eigenvalues 
+        if self.dist == "gaussian":
+            x = self.sigma * torch.randn(self.N, self.d, 1)
+        elif self.dist == "uniform":
+            x = 20*torch.rand(self.N, self.d, 1)
+        elif self.dist == "laplace":
+            m = torch.distributions.Laplace(torch.tensor([0.0]), torch.tensor([self.sigma/math.sqrt(2)]))
+            x = m.rsample(sample_shape=torch.Size([self.N,self.d]))
+        diag = torch.eye(x.shape[1]) * x[:, None]
+        #Finally, construct the resulting matrix batch with specified eigenvalues
+        self.X = torch.matmul(torch.matmul(M, diag), torch.transpose(M,2,3))
+
 
 class EigenMatrix():
-
-    def __init__(self, N, d=3, eigenvalues=None, mu=1, sigma=0.2, diagonal=False, triangular=False, similar=True):
+    def __init__(self, N, d=3, eigenvalues=None, mu= 1, sigma= 0.2, diagonal=False, triangular=False, similar=True):
         self.N = N
         self.d = d
         self.mu = mu
@@ -157,15 +198,16 @@ class EigenMatrix():
             x = x[:, :, None]
         else:
             # Set default values if not specified
+            #Gaussian 
             if mu == None:
-                mu = 1
+                mu = 0
             elif sigma == None:
                 sigma = 0.2
             x = mu * torch.ones((self.N, self.d, 1)) + sigma * torch.randn(self.N, self.d, 1)
 
             # Create diagonal matrices
         diag = torch.eye(x.shape[1]) * x[:, None]
-
+    
         if not diagonal:
             # Transformation matrix for similarity transform
             if not similar:
@@ -180,3 +222,4 @@ class EigenMatrix():
             X = diag
 
         self.X = X
+  
