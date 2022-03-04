@@ -12,7 +12,7 @@ def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
         pred = model(batch.X)
     if loss_fcn == eigval_error or loss_fcn == eigval_L1:
         batch.compute_labels()
-        sorted_eigvals = torch.sort(torch.real(batch.Y[0]),2)[0] #For full eigenvalue decomposition
+        sorted_eigvals = torch.sort(torch.real(batch.Y[0]),2)[0]  #For all eigenvalues
         loss = loss_fcn(pred, sorted_eigvals)
     elif loss_fcn == max_eigval_error: 
         batch.compute_labels()
@@ -62,7 +62,7 @@ def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None,
     
     sizes = [5,6,7,8,9,10]
     
-    distributions = ["gaussian","uniform","laplace"]
+    distributions = ["gaussian","laplace","uniform"]
     for e in range(1,epoch+1):
         for i in range(k):
 
