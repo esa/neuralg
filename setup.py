@@ -12,9 +12,13 @@ setup(
     packages=[
         "neuralg",
         "neuralg.io",
-        "neuralg.tests",
         "neuralg.models",
-        "neuralg.scripts",
+        "neuralg.ops",
+        "neuralg.tests",
+        "neuralg.training",
+        "neuralg.plots",
         "neuralg.utils",
+        "neuralg.scripts",
     ],
 )
+

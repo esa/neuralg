@@ -1,10 +1,11 @@
-from losses import *
+from prototyping.losses import *
 import numpy as np
 from collections import deque
-from RandomMatrixDataSet import get_sample
+from prototyping.RandomMatrixDataSet import get_sample
+
 
 def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
-    if batch.X_with_det is not None: 
+    if batch.X_with_det is not None:
         pred = model(batch.X_with_det)
     elif batch.X_with_permutations is not None:
         pred = model(batch.X_with_permutations)
@@ -12,10 +13,19 @@ def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
         pred = model(batch.X)
     if loss_fcn == eigval_error:
         batch.compute_labels()
-        max_eigvals = torch.max(torch.real(batch.Y[0]),2)[0] #Need to cast as real  
-        sorted_eigvals = torch.sort(torch.real(batch.Y[0]),2)[0] #For full eigenvalue decomposition
+        max_eigvals = torch.max(torch.real(batch.Y[0]), 2)[0]  # Need to cast as real
+        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[
+            0
+        ]  # For full eigenvalue decomposition
         loss = loss_fcn(pred, sorted_eigvals)
-    elif loss_fcn == inv_MSE or loss_fcn == inv_RMSE or loss_fcn == inv_frobenius or loss_fcn == inv_MAE or loss_fcn == relative_inv_MSE or loss_fcn == cond_scaled_inv_MSE:
+    elif (
+        loss_fcn == inv_MSE
+        or loss_fcn == inv_RMSE
+        or loss_fcn == inv_frobenius
+        or loss_fcn == inv_MAE
+        or loss_fcn == relative_inv_MSE
+        or loss_fcn == cond_scaled_inv_MSE
+    ):
         loss = loss_fcn(pred, batch.X)
     else:
         loss = loss_fcn(pred, batch.Y)
@@ -36,7 +46,9 @@ def train_on_batch(batch, model, loss_fcn, optimizer, scheduler=None):
     return loss
 
 
-def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None, epoch = 1):
+def run_training(
+    k, model, loss_fcn, optimizer, matrix_parameters, scheduler=None, epoch=1
+):
     # When a new network is created we init empty training logs
     loss_log = []
     eval_loss_log = []
@@ -50,8 +62,8 @@ def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None,
     # We sample some data to do evaluation during training
 
     eval_set = get_sample(matrix_parameters)
-  
-    for e in range(1,epoch+1):
+
+    for e in range(1, epoch + 1):
         for i in range(k):
 
             # Sample random matrices
@@ -77,23 +89,25 @@ def run_training(k,model,loss_fcn,optimizer,matrix_parameters, scheduler = None,
             if i % 100 == 0:
                 if matrix_parameters["det"] or matrix_parameters["det_channel"] is True:
                     pred_on_eval = model(eval_set.X_with_det)
-                elif "permutations" in matrix_parameters: 
+                elif "permutations" in matrix_parameters:
                     pred_on_eval = model(eval_set.X_with_permutations)
-                else:   
+                else:
                     pred_on_eval = model(eval_set.X)
                 if loss_fcn == eigval_error:
                     eval_set.compute_labels()
-                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]),2)[0]
-                    eval_loss = loss_fcn(pred_on_eval,sorted_eigvals)
+                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
+                    eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)
                 else:
                     eval_loss = loss_fcn(pred_on_eval, eval_set.X)
                 eval_loss_log.append(eval_loss)
- 
+
             # Print every i iterations
             if i % 1000 == 0 and i > 0:
                 lr = scheduler.get_last_lr()[0]
                 wa_out = np.mean(weighted_average)
-                print(f'epoch={e} \t It={i}\t loss={loss.item():.3e}\t lr={lr:0.3e} \t weighted_average={wa_out:.3e} eval_loss={eval_loss:.3e}\t')
+                print(
+                    f"epoch={e} \t It={i}\t loss={loss.item():.3e}\t lr={lr:0.3e} \t weighted_average={wa_out:.3e} eval_loss={eval_loss:.3e}\t"
+                )
         if scheduler is not None:
             scheduler.step()
     return model, loss_log, weighted_average_log, eval_loss_log, eval_set

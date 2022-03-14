@@ -1,0 +1,35 @@
+# General Properties
+use_gpu = false
+seed = 100
+
+# Model Parameters
+# For MLP 
+model_type = "nerf"
+n_neurons = 200
+hidden_layers = 8
+
+# Batch parameters
+matrix_sizes = [3,4,5]
+
+[batch_parameters]
+N = 10
+d = 5
+operation = "eig"
+dist = "gaussian"
+interval = 10 
+
+# Run parameters
+[run_params]
+iterations = 2000
+epoch = 1
+lr = 3e-4
+loss_fcn = "eigval_L1"
+mixed_eigval_distributions = false
+
+#Test configurations
+[test_cfg]
+N = 10000
+wigner = true
+distributions = ["gaussian","uniform","laplace"]
+interval = 10
+tolerances = [0.1,0.05,0.025,0.02,0.01,0.005]
