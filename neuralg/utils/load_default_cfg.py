@@ -12,7 +12,3 @@ def load_default_cfg():
     with open(path) as cfg:
         return DotMap(toml.load(cfg))
 
-
-def load_train_config():
-    return None
-

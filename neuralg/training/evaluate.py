@@ -30,10 +30,10 @@ def evaluate(run_cfg):
         run_cfg[str(d)] = deepcopy(_load_test_settings(run_cfg[str(d)]))
         # Initialize a DotMap for every different test set setting
         run_cfg[str(d)].test_results = DotMap()
-        no_test_sets = len(run_cfg[str(d)].test_cfg.test_settings)
+        temp_test_settings = deepcopy(run_cfg[str(d)].test_cfg.test_settings)
         # print("test sets = " + str(no_test_sets))
-        for i in range(no_test_sets):
-            test_parameters = deepcopy(run_cfg[str(d)].test_cfg.test_settings[i])
+        for i, k in enumerate(temp_test_settings):
+            test_parameters = temp_test_settings[k]
             test_parameters["d"] = d
             # print(test_parameters)
             results = _evaluate_model(model, test_parameters)
@@ -41,25 +41,25 @@ def evaluate(run_cfg):
             for TOL in run_cfg[str(d)].test_cfg.tolerances:
                 acc.append(_compute_accuracy(TOL, results).item())
             # print(acc)
-            run_cfg[str(d)].test_results[str(i)] = acc
+            run_cfg[str(d)].test_results[k] = acc
 
     return run_cfg
 
 
 def _load_test_settings(run_cfg):
-    run_cfg.test_cfg.test_settings = []
+    run_cfg.test_cfg.test_settings = {}
     test_parameters = {
         "N": run_cfg.test_cfg["N"],
         "operation": run_cfg.batch_parameters.operation,
     }
     if run_cfg.test_cfg.wigner:
         test_parameters["wigner"] = True
-        run_cfg.test_cfg.test_settings.append(deepcopy(test_parameters))
+        run_cfg.test_cfg.test_settings["wigner"] = deepcopy(test_parameters)
 
     test_parameters["wigner"] = False
     for dist in run_cfg.test_cfg.distributions:
         test_parameters["dist"] = dist
-        run_cfg.test_cfg.test_settings.append(deepcopy(test_parameters))
+        run_cfg.test_cfg.test_settings[str(dist)] = deepcopy(test_parameters)
     return run_cfg
 
 
