@@ -12,25 +12,19 @@ from neuralg.utils.set_log_level import set_log_level
 
 
 """ TODO
-[] Implement loading of global training configurations
-[] Decide and implement how training results are saved and shipped to notebook
+[] Improve flexibility for other models
 
-[] 
 """
-
-
-def load_config():
-    return None
 
 
 def train_models(cfg, save_training_run=False):
     """ Train models with settings in passed configurations
 
     Args:
-        cfg (DotMap): _description_
+        cfg (DotMap): Training configurations for run
 
     Returns:
-        DotMap: _description_
+        DotMap: Post-training configurations with added trained models and loss results
     """
     set_log_level("TRACE")
 

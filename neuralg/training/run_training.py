@@ -19,7 +19,6 @@ import neuralg.models
 [] Improve train_cfg dotmap argument to contain:
     - Option for optimizer and scheduler
 [] Improve logging
-[] Validation from training, maybe own file/module since this will also be used by eigtest?
 [] Finish Docstrings
 [] Clean up
 """

@@ -1,5 +1,3 @@
-from cgi import test
-from json import load
 import numpy as np
 import torch
 
