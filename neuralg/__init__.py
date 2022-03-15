@@ -39,7 +39,7 @@ neuralg_ModelHandler = ModelHandler()
 __all__ = [
     "eig",
     "evaluate",
-    "loaf_default_cfg",
+    "load_default_cfg",
     "load_model",
     "plot_loss_logs",
     "plot_eigval_results",
