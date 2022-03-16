@@ -1,27 +1,11 @@
-from matplotlib import set_loglevel
 import torch
 from dotmap import DotMap
 import numpy as np
 from collections import deque
 from loguru import logger
 from copy import deepcopy
-import os
 from neuralg.training.losses import eigval_L1
-from neuralg.training.RandomMatrixDataSet import RandomMatrixDataSet
 from neuralg.training.get_sample import get_sample
-from neuralg.utils.set_log_level import set_log_level
-
-
-import neuralg.models
-
-"""  TODO
-[] Figure out why importing only works with neuralg.
-[] Improve train_cfg dotmap argument to contain:
-    - Option for optimizer and scheduler
-[] Improve logging
-[] Finish Docstrings
-[] Clean up
-"""
 
 
 def _train_on_batch(batch, model, loss_fcn, optimizer):
@@ -31,10 +15,10 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
         batch (RandomMatrixDataSet): Batch of matrices to backpropagate loss from
         model (torch.nn): Model to train on batch
         loss_fcn (function): Function to compute loss on batch
-        optimizer (torch.opt): _description_
+        optimizer (torch.opt): Optimizer used in training
 
     Returns:
-        _type_: loss from model forward pass on batch 
+        tensor: loss from model forward pass on batch 
     """
     pred = model(batch.X)
 
@@ -59,16 +43,15 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
 
 
 def _init_training(train_cfg):
-    """ Initializes necessary 
+    """ Initializes necessary items for a training run
 
     Args:
-        train_cfg (DotMap): Configurations for training, must include a model
+        train_cfg (DotMap): Configurations for training, must include a torch model
 
     Returns:
        DotMap, torch.opt, torch.scheduler: Run config with  optimizer and scheduler
     """
     # Initialize optimizer and scheduler.
-    # Maybe this should also be optional so we can try different ones
     optimizer = torch.optim.Adam(
         train_cfg.model.parameters(), lr=train_cfg.run_params.lr
     )
@@ -86,9 +69,7 @@ def run_training(train_cfg):
     Returns:
         DotMap: Results from training run, including loss logs, trained model and best model state dict
     """
-    logger.trace(
-        "Initializing training..."  # Maybe specify the model and config etc...?
-    )
+    logger.trace("Initializing training...")
 
     loss_fcn = train_cfg.run_params.loss_fcn
     if loss_fcn == "eigval_L1":
@@ -112,8 +93,6 @@ def run_training(train_cfg):
 
     # We sample some data to do evaluation during training
     eval_set = get_sample(matrix_parameters)
-
-    supported_sizes = [3, 4, 5, 6, 7, 8, 9, 10]
 
     distributions = ["gaussian", "laplace", "uniform"]
     logger.trace("Starting training...")

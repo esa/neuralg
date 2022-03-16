@@ -1,19 +1,15 @@
-from cProfile import run
-from cgi import test
 import torch
 from dotmap import DotMap
 from neuralg.training.losses import relative_L1_evaluation_error
 from neuralg.training.get_sample import get_sample
-from neuralg.scripts.train_models import train_models
-from neuralg.utils.load_default_cfg import load_default_cfg
 from copy import deepcopy
 
 
 def evaluate(run_cfg):
-    """_summary_
+    """ Evaluate a training run with the passed configurations
 
     Args:
-        run_cfg (DotMap): _description_
+        run_cfg (DotMap): Post-training configurations
 
     Returns:
         DotMap: Passed run configuration with added evaluation results 
@@ -38,8 +34,8 @@ def evaluate(run_cfg):
             # print(test_parameters)
             results = _evaluate_model(model, test_parameters)
             acc = []
-            for TOL in run_cfg[str(d)].test_cfg.tolerances:
-                acc.append(_compute_accuracy(TOL, results).item())
+            for tol in run_cfg[str(d)].test_cfg.tolerances:
+                acc.append(_compute_accuracy(tol, results).item())
             # print(acc)
             run_cfg[str(d)].test_results[k] = acc
 
@@ -93,9 +89,19 @@ def _evaluate_eigval_model(model, test_set):
     return relative_L1_evaluation_error(predicted_eigvals, eigvals)
 
 
-def _compute_accuracy(TOL, results):
+def _compute_accuracy(tol, results):
+    """ Compute the accuracy given some tolerance and prediction errors on test set 
+
+    Args:
+        TOL (_type_): Tolerance level, should be between zero and one
+        results (_type_): Array of prediction errors
+
+    Returns:
+        _type_: Resulting prediction accuracy on the test set
+    """
+
     x = torch.zeros(results.shape[0])
-    y = (results - TOL).squeeze()
+    y = (results - tol).squeeze()
     x[y > 0] = 1
     percent = 1 - x.sum() / results.shape[0]
     return percent

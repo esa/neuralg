@@ -1,3 +1,6 @@
+# From https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py,
+# Dario Izzo and Pablo Gomez, "Geodesy of irregular small bodies via neural density fields: geodesyNets" (2021). https://arxiv.org/pdf/2105.13031.pdf
+
 import torch
 import torch.nn as nn
 
@@ -28,6 +31,7 @@ class EigNERF(nn.Module):
         hidden_layers=8,
     ):
         super().__init__()
+        self.model_type = "nerf"
         self.matrix_dimension = matrix_dimension
         self.in_features = in_features
         self.skip = skip

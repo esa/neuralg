@@ -1,35 +1,35 @@
 # General Properties
-use_gpu = false
+use_gpu = false 
 seed = 100
 
 # Model Parameters
 # For MLP 
-model_type = "nerf"
-n_neurons = 200
-hidden_layers = 8
+model_type = "nerf" #Name of the model type
+n_neurons = 200 #Number of nodes in the hidden layers
+hidden_layers = 8 #Number of hidden layers in MLP
 
 # Batch parameters
-matrix_sizes = [3,4,5]
+matrix_sizes = [3,4,5] #The matrix sizes that will be used in training
 
-[batch_parameters]
-N = 64
-d = false
-operation = "eig"
-dist = "gaussian"
-interval = 10 
+[batch_parameters] #Dict of parameters characterizing the matrix batches in training
+N = 64 #Batch size
+d = false #Initiate matrix size, will be specified in training
+operation = "eig" #Operation defining the labels
+dist = "gaussian" #Distribution from which eigenvalues of generated matrices are drawn
+interval = 10 #If Wigner matrices, the elements will be drawn uniform from [-interval,interval]. This parameter consequently governs the variance of eigenvalues
 
 # Run parameters
-[run_params]
-iterations = 2000
-epoch = 1
-lr = 3e-4
-loss_fcn = "eigval_L1"
-mixed_eigval_distributions = false
+[run_params] #Dict of parameters needed for training
+iterations = 2000 #Iterations per epoch
+epoch = 1 #Number of epochs
+lr = 3e-4 #Learning rate
+loss_fcn = "eigval_L1" #Loss function used in training
+mixed_eigval_distributions = false #If true, eigenvalues will be drawn from varying dsitributions in training
 
 #Test configurations
-[test_cfg]
-N = 10000
-wigner = true
-distributions = ["gaussian","uniform","laplace"]
-interval = 10
-tolerances = [0.1,0.08,0.06,0.05,0.025,0.02,0.01,0.005]
+[test_cfg] #Dict of parameters defining the set(s) of matrices we do model evaluation on
+N = 10000 #Number of evaulation examples
+wigner = true #If true,model will be evaulated on Wigner matrices
+distributions = ["gaussian","uniform","laplace"] #Distribution from which eigenvalues of evaluation matrices are drawn
+interval = 10 #If Wigner matrices, the elements will be drawn uniform from [-interval,interval]. This parameter consequently governs the variance of eigenvalues
+tolerances = [0.1,0.08,0.06,0.05,0.025,0.02,0.01,0.005] #The different tolerances from which the accuracy will be determined.

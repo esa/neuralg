@@ -3,13 +3,13 @@ from neuralg.training.RandomMatrixDataSet import RandomMatrixDataSet
 
 
 def get_sample(matrix_parameters):
-    """ Sample a batch of random matrices from passed configuratton
+    """ Sample a batch of random matrices from passed configuration
 
     Args:
         matrix_parameters (dict): Parameters characterizing the batch of generated matrices
 
     Returns:
-        RandomMatrixDataSet: _description_
+        RandomMatrixDataSet: Batch of random matrices with given matrix parameters
     """
     # Instantiate batch
     N, d = matrix_parameters["N"], matrix_parameters["d"]

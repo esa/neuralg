@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-plt.rcParams.update(
-    {"text.usetex": True, "font.family": "serif", "font.serif": ["Palatino"],}
-)
-
 
 def plot_loss_logs(run_cfg, save_path=None):
     """ Plot dynamics from training

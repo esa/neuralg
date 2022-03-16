@@ -1,17 +1,12 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
-plt.rcParams.update(
-    {"text.usetex": True, "font.family": "serif", "font.serif": ["Palatino"],}
-)
 
 
 def plot_eigval_results(run_cfg, save_path=None):
-    """_summary_
+    """ Plot accuracy results as a function of tolerance for evaluated post-training run configuration
 
     Args:
-        run_cfg (_type_): _description_
-        save_path (_type_, optional): _description_. Defaults to None.
+        run_cfg (DotMap): Evaluated post-training configuration
+        save_path (str, optional): Path to folder for saving plot. Defaults to None
     """
     ms = run_cfg.matrix_sizes
     no_plots = len(ms)
@@ -32,4 +27,4 @@ def plot_eigval_results(run_cfg, save_path=None):
         ax.set_xlabel("$\\tau $", fontsize=18)
         ax.set_ylabel("Accuracy", fontsize=16)
         if save_path is not None:
-            plt.savefig(save_path + "/test_accurace{}.png".format(d), dpi=150)
+            plt.savefig(save_path + "/test_accuracy{}.png".format(d), dpi=150)
