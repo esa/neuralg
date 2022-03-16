@@ -1,6 +1,4 @@
 import os
-import torch
-import sys
 from loguru import logger
 
 # Add exposed features here
@@ -14,7 +12,7 @@ from .utils.print_cfg import print_cfg
 from .plots.plot_loss_logs import plot_loss_logs
 from .plots.plot_eigval_results import plot_eigval_results
 from .training.save_run import save_run
-from .training.evaluate import evaluate
+from .evaluation.evaluate import evaluate
 
 set_log_level("INFO")
 
