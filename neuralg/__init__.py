@@ -9,6 +9,7 @@ from .utils.load_default_cfg import load_default_cfg
 from .scripts.train_models import train_models
 from .utils.ModelHandler import ModelHandler
 from .utils.set_log_level import set_log_level
+from .utils.set_precision import set_precision
 from .utils.print_cfg import print_cfg
 from .plots.plot_loss_logs import plot_loss_logs
 from .plots.plot_eigval_results import plot_eigval_results
@@ -24,27 +25,21 @@ if "TORCH_DEVICE" not in os.environ:
 logger.info(f"Initialized neuralg for {os.environ['TORCH_DEVICE']}")
 
 # Set precision (and potentially GPU)
-torch.set_default_tensor_type(torch.DoubleTensor)
-logger.info("Using double precision")
+set_precision()
 
 # Initialize global model handler
 neuralg_ModelHandler = ModelHandler()
 
-<<<<<<< HEAD
-#
-__all__ = ["eig"]
-=======
 # Potentially in the final module not all of these should be imported,
 # but I have it right now for the notebook.
 __all__ = [
-    "eig",
-    "evaluate",
-    "load_default_cfg",
-    "load_model",
-    "plot_loss_logs",
-    "plot_eigval_results",
-    "print_cfg",
-    "save_run",
-    "train_models",
+    "eig"
+    #     ,"evaluate",
+    #     "load_default_cfg",
+    #     "load_model",
+    #     "plot_loss_logs",
+    #     "plot_eigval_results",
+    #     "print_cfg",
+    #     "save_run",
+    #     "train_models"
 ]
->>>>>>> d9fad2a9f40f6342f4d5b8c00c25ace2311a4822
