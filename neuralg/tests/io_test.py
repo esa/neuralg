@@ -1,38 +1,25 @@
 import torch
-import sys
-
 from neuralg.io.load_model import load_model
+from neuralg.utils.count_parameters import count_parameters
 
 
-# from utils import countParameters
 def test_load_model():
-
-    model_name = "TestModel"
+    """Tests if a model can be loaded succesfully
+    """
+    model_name = "eigval3"
     model = load_model(model_name)
 
     assert model is not None
-    assert model.__class__.__name__ == "TestModel"
-    assert model.model_type == "ConvNet"
+    assert model.__class__.__name__ == "EigNERF"
+    assert model.model_type == "nerf"
 
-    assert count_parameters(model) == 2689
+    assert count_parameters(model) == 329603
 
-    some_test_input = torch.rand(1, 1, 10, 10)
+    some_test_input = torch.rand(1, 1, 3, 3)
 
     output = model(some_test_input)
     assert output.__class__.__name__ == "Tensor"
-    assert output.shape == torch.Size([1, 1, 10])
-
-
-def count_parameters(model):
-    """Counts number of trainable parameters in torch model
-
-    Args:
-        model (_type_): Trained model
-
-    Returns:
-        int : Number of trainable parameters
-    """
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+    assert output.shape == torch.Size([1, 1, 3])
 
 
 if __name__ == "__main__":

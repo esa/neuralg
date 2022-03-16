@@ -1,34 +1,41 @@
 import torch
-import pickle as pk
-import numpy as np
-import sys
-from neuralg.models.TestModel import TestModel
+import os
+from dotmap import DotMap
 from neuralg.models.nerf import EigNERF
-
-
-""" TODO
-[] Fix the paths to saved models
-[] Eventually figure out how to keep track of available models in a smarter way
-"""
-
-# For now, avaiable models to load are just stored locally in this dict
-# Maybe it makes more sense to have this in models folder?
-available_models_dict = {
-    "TestModel": ["./neuralg/tests/test_data/test_model.pt", TestModel()]
-}
-# Added some trained nerf models for first minimal module
-for d in range(3, 11):
-    available_models_dict["eigval{}".format(d)] = [
-        "./neuralg/models/saved_models/eigval{}.pt".format(d),
-        EigNERF(d, d ** 2),
-    ]
+from neuralg.utils.constants import NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE
 
 
 def load_model(model_name):
+    """ Load a requested model, if available in the module. 
 
-    assert model_name in available_models_dict
+    Args:
+        model_name (str): Name of requested model
 
-    [model_path, model] = available_models_dict[model_name]
+    Returns:
+        torch.nn : Requested model. Raises assertion if the model name not known. 
+    """
+
+    available_models = DotMap()
+    # Added some trained nerf models for first minimal module
+    for d in range(NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE + 1):
+        state_dict_path = os.path.join(
+            os.path.dirname(__file__), "../models/saved_models/eigval{}.pt".format(d),
+        )
+        available_models["eigval{}".format(d)] = [state_dict_path, "nerf", d]
+
+    assert model_name in available_models, "Model not available"
+
+    model_path, model_type, matrix_size = (x for x in available_models[model_name])
+
+    if model_type == "nerf":
+        assert type(matrix_size) == int
+        assert matrix_size > 0
+        model = EigNERF(matrix_size, in_features=matrix_size ** 2)
+    else:
+        raise NotImplementedError(
+            "Unknown model type.  Available are: " + available_models.keys()
+        )
+
     state_dict = torch.load(model_path)
     model.load_state_dict(state_dict=state_dict)
     model.eval()
