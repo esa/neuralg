@@ -30,5 +30,21 @@ logger.info("Using double precision")
 # Initialize global model handler
 neuralg_ModelHandler = ModelHandler()
 
+<<<<<<< HEAD
 #
 __all__ = ["eig"]
+=======
+# Potentially in the final module not all of these should be imported,
+# but I have it right now for the notebook.
+__all__ = [
+    "eig",
+    "evaluate",
+    "load_default_cfg",
+    "load_model",
+    "plot_loss_logs",
+    "plot_eigval_results",
+    "print_cfg",
+    "save_run",
+    "train_models",
+]
+>>>>>>> d9fad2a9f40f6342f4d5b8c00c25ace2311a4822
