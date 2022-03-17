@@ -4,8 +4,8 @@ import numpy as np
 from collections import deque
 from loguru import logger
 from copy import deepcopy
-from neuralg.training.losses import eigval_L1
-from neuralg.training.get_sample import get_sample
+from ..training.losses import eigval_L1
+from ..training.get_sample import get_sample
 
 
 def _train_on_batch(batch, model, loss_fcn, optimizer):

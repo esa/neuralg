@@ -6,10 +6,10 @@ def compute_accuracy(tol, results):
 
     Args:
         tol (float): Tolerance level, should be between zero and one
-        results (tensor): Array of prediction errors
+        results (tensor): Tensor containing prediction errors
 
     Returns:
-        tensor: Resulting prediction accuracy on the test set
+        tensor: Resulting prediction accuracy on the test set, between 0 and 1 where 1 is 100% accuracy
     """
 
     x = torch.zeros(results.shape[0])

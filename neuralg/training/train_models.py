@@ -1,20 +1,10 @@
-from cProfile import run
 from copy import deepcopy
-from neuralg.training.run_training import run_training  # Maybe save run?
-import torch
+from neuralg.training.run_training import run_training
 from loguru import logger
 from dotmap import DotMap
 from neuralg.models.nerf import EigNERF
-from neuralg.training.losses import eigval_L1
 from neuralg.training.save_run import save_run
-from neuralg.utils.load_default_cfg import load_default_cfg
 from neuralg.utils.set_log_level import set_log_level
-
-
-""" TODO
-[] Improve flexibility for other models
-
-"""
 
 
 def train_models(cfg, save_training_run=False):
@@ -42,11 +32,11 @@ def train_models(cfg, save_training_run=False):
                 hidden_layers=temp_config.hidden_layers,
             )
         else:
-            raise ValueError("Model type is not available for training")
+            raise NotImplementedError("Model type is not available for training")
         temp_config.model = model
         logger.trace("Calling training for matrix size {}".format(d))
         run_results[str(d)] = run_training(temp_config)
-        # print(run_results[str(d)].model) here it is fine but it seems like its overwriting
+
     logger.trace("Finalized training all requested models...")
     # For plotting
     run_results.matrix_sizes = deepcopy(cfg.matrix_sizes)

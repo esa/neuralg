@@ -1,6 +1,8 @@
+from copy import deepcopy
 import torch
-from neuralg.training.losses import relative_L1_evaluation_error
-from neuralg.training.get_sample import get_sample
+from ..training.losses import relative_L1_evaluation_error
+from ..training.get_sample import get_sample
+from ..utils.constants import NEURALG_SUPPORTED_OPERATIONS
 
 
 def evaluate_model(model, test_parameters, test_set=None):
@@ -12,14 +14,19 @@ def evaluate_model(model, test_parameters, test_set=None):
     Returns:
         dict : Resulting errors from model predictions on test set
     """
-    assert model is not None, "Model can not be None type"
+    assert model is not None, "Model should be torch.nn type, not None type"
+    tp = deepcopy(test_parameters)
     if test_parameters["operation"] == "eig":
-        test_parameters["operation"] = torch.linalg.eig
-        test_set = _get_test_set(test_parameters)
+        tp["operation"] = torch.linalg.eig
+        test_set = _get_test_set(tp)
         test_set.compute_labels()
         results = _evaluate_eigval_model(model, test_set)
     else:
-        raise ValueError("Evaluation for this operation is not supported")
+        raise NotImplementedError(
+            "Evaluation for this operation is not supported, must be one of {}".format(
+                NEURALG_SUPPORTED_OPERATIONS
+            )
+        )
     return results
 
 

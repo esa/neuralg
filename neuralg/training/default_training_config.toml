@@ -16,7 +16,7 @@ N = 64 #Batch size
 d = false #Initiate matrix size, will be specified in training
 operation = "eig" #Operation defining the labels
 dist = "gaussian" #Distribution from which eigenvalues of generated matrices are drawn
-interval = 10 #If Wigner matrices, the elements will be drawn uniform from [-interval,interval]. This parameter consequently governs the variance of eigenvalues
+interval = 10 #If Wigner matrices, the elements will be drawn uniform from [-interval,interval]. Consequently, governs the variance of eigenvalues
 
 # Run parameters
 [run_params] #Dict of parameters needed for training

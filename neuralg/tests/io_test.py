@@ -16,7 +16,6 @@ def test_load_model():
     assert count_parameters(model) == 329603
 
     some_test_input = torch.rand(1, 1, 3, 3)
-
     output = model(some_test_input)
     assert output.__class__.__name__ == "Tensor"
     assert output.shape == torch.Size([1, 1, 3])

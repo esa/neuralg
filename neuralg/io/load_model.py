@@ -1,8 +1,8 @@
 import torch
 import os
 from dotmap import DotMap
-from neuralg.models.nerf import EigNERF
-from neuralg.utils.constants import NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE
+from ..models.nerf import EigNERF
+from ..utils.constants import NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE
 
 
 def load_model(model_name):
@@ -23,7 +23,9 @@ def load_model(model_name):
         )
         available_models["eigval{}".format(d)] = [state_dict_path, "nerf", d]
 
-    assert model_name in available_models, "Model not available"
+    assert model_name in available_models, "Model not available, must be in {}".format(
+        list(available_models.keys())
+    )
 
     model_path, model_type, matrix_size = (x for x in available_models[model_name])
 

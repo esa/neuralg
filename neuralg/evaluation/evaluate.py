@@ -1,7 +1,7 @@
 from dotmap import DotMap
 from copy import deepcopy
-from neuralg.evaluation.evaluate_model import evaluate_model
-from neuralg.evaluation.compute_accuracy import compute_accuracy
+from ..evaluation.evaluate_model import evaluate_model
+from ..evaluation.compute_accuracy import compute_accuracy
 
 
 def evaluate(run_cfg):
