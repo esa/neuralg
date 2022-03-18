@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+
+
 class NERFLayer(nn.Module):
     def __init__(self, in_features, out_features, bias=True, activation=nn.ReLU()):
         super().__init__()
@@ -16,20 +18,27 @@ class NERFLayer(nn.Module):
 
 
 class EigNERF(nn.Module):
-    def __init__(self,matrix_dimension,in_features, skip=[], n_neurons=100, activation=nn.Sigmoid(), hidden_layers=8):
+    def __init__(
+        self,
+        matrix_dimension,
+        in_features,
+        skip=[],
+        n_neurons=100,
+        activation=nn.Sigmoid(),
+        hidden_layers=8,
+    ):
         super().__init__()
         self.matrix_dimension = matrix_dimension
         self.in_features = in_features
         self.skip = skip
 
         self.net = nn.ModuleList()
-        self.flatten = nn.Flatten(start_dim = 1)
-        self.net.append(
-            NERFLayer(in_features, n_neurons))
+        self.flatten = nn.Flatten(start_dim=1)
+        self.net.append(NERFLayer(in_features, n_neurons))
 
         for i in range(hidden_layers):
             if i in self.skip:
-                self.net.append(NERFLayer(n_neurons+in_features, n_neurons))
+                self.net.append(NERFLayer(n_neurons + in_features, n_neurons))
             else:
                 self.net.append(NERFLayer(n_neurons, n_neurons))
 
@@ -49,4 +58,5 @@ class EigNERF(nn.Module):
             if layer_idx in self.skip:
                 out = torch.cat([out, identity], dim=1)
 
-        return out[:,None,:] #Dummy index to fit framework
+        return out[:, None, :]  # Dummy index to fit framework
+

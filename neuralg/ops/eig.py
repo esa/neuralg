@@ -48,16 +48,15 @@ def _predict(model, A):
         # Add dummy dimension
         A = A[None, :]
         assert len(A.shape) == 3
-        # Returns a one dimensional tensor with
+        # Returns a one dimensional tensor
         out = model(A).squeeze()
+
     elif len(input_shape) == 3:
+        A = A[:, None, :]
         out = model(A).squeeze(1)
-    elif len(input_shape) == 4 and input_shape[1] == 1:
-        out = model(A)
     else:
-        raise NotImplementedError(
-            "Prediction on this input dimension is not implemented yet"
-        )
+        out = model(A)
+
     return out
 
 

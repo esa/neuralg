@@ -18,8 +18,11 @@ def load_model(model_name):
     available_models = DotMap()
     # Added some trained nerf models for first minimal module
     for d in range(NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE + 1):
-        state_dict_path = os.path.join(
-            os.path.dirname(__file__), "../models/saved_models/eigval{}.pt".format(d),
+        state_dict_path = os.path.realpath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "../models/saved_models/eigval{}.pt".format(d),
+            )
         )
         available_models["eigval{}".format(d)] = [state_dict_path, "nerf", d]
 

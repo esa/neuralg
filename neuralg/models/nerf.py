@@ -42,7 +42,10 @@ class EigNERF(nn.Module):
             self.out_features = matrix_dimension  # For e.g. full eigval problem
 
         self.net = nn.ModuleList()
-        self.flatten = nn.Flatten(start_dim=1)
+        # Added this for more robust against different batch dimensions
+        self.flatten_batch = nn.Flatten(start_dim=0, end_dim=1)
+        self.flatten = nn.Flatten(start_dim=-2)
+
         self.net.append(NERFLayer(in_features, n_neurons))
 
         for i in range(hidden_layers):
@@ -51,21 +54,25 @@ class EigNERF(nn.Module):
             else:
                 self.net.append(NERFLayer(n_neurons, n_neurons))
 
-        self.net.append(nn.Linear(n_neurons, self.out_features))
+        self.net.append(nn.Linear(n_neurons, matrix_dimension))
 
     def forward(self, x):
-        x = self.flatten(x)
+        # print("input" + str(x.shape))
+        x_flat_batch = self.flatten_batch(x)
+        # print("batch flatten:" + str(x_flat_batch.shape))
+        x_flat = self.flatten(x_flat_batch)
+        # print(x_flat.shape)
         # save for skip connection
-        identity = x
+        identity = x_flat
 
         # compute first layer
-        out = self.net[0].forward(x)
+        out = self.net[0].forward(x_flat)
 
         # compute all other layers and apply skip where requested
         for layer_idx in range(1, len(self.net)):
             out = self.net[layer_idx].forward(out)
             if layer_idx in self.skip:
-                out = torch.cat([out, identity], dim=1)
+                out = torch.cat([out, identity], dim=-1)
 
-        return out[:, None, :]  # Dummy index to fit framework
-
+        out = nn.Unflatten(0, (x.shape[0], x.shape[1]))(out)
+        return out

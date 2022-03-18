@@ -29,11 +29,13 @@ def test_eig():
     results.accuracy = []
     for matrix_size in supported_sizes:
         test_parameters["d"] = matrix_size
-        # Make sure that it supports different types of input e.g. in and out of batch mode
+        # Make sure that it supports different types of input e.g. in and out of batch mode with different batch dimensions
         test_matrix = torch.rand(matrix_size, matrix_size)
         test_batch = torch.rand(2, matrix_size, matrix_size)
-        out1, out2 = eig(test_matrix), eig(test_batch)
-
+        test_batch2 = torch.rand(2, 3, 4, matrix_size, matrix_size)
+        out1 = eig(test_matrix)
+        out2 = eig(test_batch)
+        out3 = eig(test_batch2)
         assert out1 is not None
         assert out1.__class__.__name__ == "Tensor"
         assert out1.shape == torch.Size([matrix_size])
@@ -41,6 +43,10 @@ def test_eig():
         assert out2 is not None
         assert out2.__class__.__name__ == "Tensor"
         assert out2.shape == torch.Size([2, matrix_size])
+
+        assert out3 is not None
+        assert out3.__class__.__name__ == "Tensor"
+        assert out3.shape == torch.Size([2, 3, 4, matrix_size])
 
         # Should also handle invalid input by throwing value errors
         try:
