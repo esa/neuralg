@@ -70,12 +70,8 @@ def _validate_input(input):
         ValueError: If matrices are not quadratic
         ValueError: If input is not at least two dimensional
     """
-    if len(input.shape) >= 2:
-        None
-    else:
-        raise ValueError("Input must be at least two dimensional")
+    if len(input.shape) < 2:
+        raise ValueError("Input must be at least two dimensional, but had shape" +  str(input.shape))
 
-    if input.shape[-2] == input.shape[-1]:
-        None
-    else:
-        raise ValueError("Matrices must be quadratic")
+    if input.shape[-2] != input.shape[-1]:
+        raise ValueError("Matrices must be quadratic", but had shape" +  str(input.shape))
