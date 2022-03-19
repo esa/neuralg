@@ -1,5 +1,6 @@
 # From https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py,
-# Dario Izzo and Pablo Gomez, "Geodesy of irregular small bodies via neural density fields: geodesyNets" (2021). https://arxiv.org/pdf/2105.13031.pdf
+# Implementation of architecture from "NeRF: Representing Scenes as
+# Neural Radiance Fields for View Synthesis" , https://arxiv.org/pdf/2003.08934.pdf
 
 import torch
 import torch.nn as nn
