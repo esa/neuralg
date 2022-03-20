@@ -1,6 +1,6 @@
 # From https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py,
-# Dario Izzo and Pablo Gomez, "Geodesy of irregular small bodies via neural density fields: geodesyNets" (2021). https://arxiv.org/pdf/2105.13031.pdf
-
+# Implementation of architecture from "NeRF: Representing Scenes as
+# Neural Radiance Fields for View Synthesis" , https://arxiv.org/pdf/2003.08934.pdf
 import torch
 import torch.nn as nn
 
@@ -57,11 +57,10 @@ class EigNERF(nn.Module):
         self.net.append(nn.Linear(n_neurons, matrix_dimension))
 
     def forward(self, x):
-        # print("input" + str(x.shape))
         x_flat_batch = self.flatten_batch(x)
-        # print("batch flatten:" + str(x_flat_batch.shape))
+
         x_flat = self.flatten(x_flat_batch)
-        # print(x_flat.shape)
+
         # save for skip connection
         identity = x_flat
 
