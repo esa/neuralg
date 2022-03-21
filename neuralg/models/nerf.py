@@ -43,7 +43,7 @@ class EigNERF(nn.Module):
 
         self.net = nn.ModuleList()
         # Added this for more robust against different batch dimensions
-        self.flatten_batch = nn.Flatten(start_dim=0, end_dim=1)
+        self.flatten_batch = nn.Flatten(start_dim=0, end_dim=-3)
         self.flatten = nn.Flatten(start_dim=-2)
 
         self.net.append(NERFLayer(in_features, n_neurons))
@@ -57,9 +57,13 @@ class EigNERF(nn.Module):
         self.net.append(nn.Linear(n_neurons, matrix_dimension))
 
     def forward(self, x):
-        x_flat_batch = self.flatten_batch(x)
+        batch_dim = x.shape[0:-2]
 
-        x_flat = self.flatten(x_flat_batch)
+        # Is there a smarter way to deal with different batch dimensions?
+        if len(batch_dim) > 1:
+            x = self.flatten_batch(x)
+        print(x.shape)
+        x_flat = self.flatten(x)
 
         # save for skip connection
         identity = x_flat
@@ -72,6 +76,6 @@ class EigNERF(nn.Module):
             out = self.net[layer_idx].forward(out)
             if layer_idx in self.skip:
                 out = torch.cat([out, identity], dim=-1)
-
-        out = nn.Unflatten(0, (x.shape[0], x.shape[1]))(out)
+        if len(batch_dim) > 1:
+            out = nn.Unflatten(0, batch_dim)(out)
         return out
