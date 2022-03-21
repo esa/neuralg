@@ -16,7 +16,7 @@ if "TORCH_DEVICE" not in os.environ:
 
 logger.info(f"Initialized neuralg for {os.environ['TORCH_DEVICE']}")
 
-# Set default precision
+# Set default precision ti float32 and uses CUDA If available
 set_precision()
 
 # Initialize global model handler
