@@ -11,7 +11,7 @@ def plot_loss_logs(run_cfg, save_path=None):
     ms = run_cfg.matrix_sizes
     no_plots = len(ms)
     for j in range(no_plots):
-        d = str(ms[j])
+        d = ms[j]
         fig = plt.figure(figsize=(14, 6), dpi=150)
         fig.patch.set_facecolor("white")
         k = run_cfg[d].run_params.iterations

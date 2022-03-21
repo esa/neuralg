@@ -12,12 +12,12 @@ def get_sample(matrix_parameters):
         RandomMatrixDataSet: Batch of random matrices with given matrix parameters
     """
     # Instantiate batch
-    N, d = matrix_parameters["N"], matrix_parameters["d"]
+    N, dim = matrix_parameters["N"], matrix_parameters["d"]
     if "operation" in matrix_parameters:
         op = matrix_parameters["operation"]
-        M = RandomMatrixDataSet(N, d, op)
+        M = RandomMatrixDataSet(N, dim, op)
     else:
-        M = RandomMatrixDataSet(N, d)
+        M = RandomMatrixDataSet(N, dim)
 
     if "dist" in matrix_parameters:
         M.from_dist(matrix_parameters["dist"])
