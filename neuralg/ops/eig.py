@@ -35,18 +35,7 @@ def _predict(model, A):
     Returns:
         tensor: Containing eigenvalue approximations, of shape [*,d]
     """
-    input_shape = A.shape
-    if len(input_shape) == 2:
-        # Add dummy dimension
-        A = A[None, :]
-        # Returns a one dimensional tensor
-        out = model(A).squeeze()
-    elif len(input_shape) == 3:
-        A = A[:, None, :]
-        out = model(A).squeeze(1)
-    else:
-        out = model(A)
-
+    out = model(A)
     return out
 
 

@@ -62,7 +62,7 @@ class EigNERF(nn.Module):
         # Is there a smarter way to deal with different batch dimensions?
         if len(batch_dim) > 1:
             x = self.flatten_batch(x)
-        print(x.shape)
+
         x_flat = self.flatten(x)
 
         # save for skip connection
