@@ -32,7 +32,6 @@ def _predict(model, A):
         tensor: Containing eigenvalue approximations, of shape [*,d]
     """
     out = model(A)
-
     return out
 
 
