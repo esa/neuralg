@@ -29,6 +29,7 @@ def test_eig():
     results.accuracy = []
     for matrix_size in supported_sizes:
         test_parameters["d"] = matrix_size
+
         # Make sure that it supports different types of input e.g. in and out of batch mode with different batch dimensions
         test_matrix = torch.rand(matrix_size, matrix_size)
         test_batch = torch.rand(2, matrix_size, matrix_size)
@@ -57,22 +58,6 @@ def test_eig():
             out = eig(torch.rand(3))
         except ValueError:
             None
-
-        # This is if we want it to be numpy compatible, it actually seemed to cause some trouble
-        # when I tried to fix it. But did not want to spend time on it at this stage
-
-        # test_numpy = np.random.rand(matrix_size, matrix_size)
-        # out3 = eig(test_numpy)
-        # assert out3 is not None
-        # assert out3.__class__.__name__ == "Tensor"
-        # assert out3.shape == torch.Size([matrix_size])
-
-        # # Should also work in batch mode but with numpy
-        # test_numpy = np.random.rand(2, 1, matrix_size, matrix_size)
-        # out4 = eig(test_numpy)
-        # assert out4 is not None
-        # assert out4.__class__.__name__ == "Tensor"
-        #  # assert out4.shape == torch.Size([2, 1, matrix_size])
 
         # Test that errors are within the bound
         error = evaluate_model(eig, test_parameters)
