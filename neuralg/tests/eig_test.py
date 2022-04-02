@@ -21,7 +21,7 @@ def test_eig():
     test_parameters = {"N": 10000, "operation": "eig", "wigner": True}
 
     # These are set pretty high right now
-    tol = 0.15  # Preliminary tolerace
+    tol = 0.16  # Preliminary tolerace
     error_bound = 0.95  # Percentage of matrices we require to lie within the tolerance
     results = DotMap()
     # Track which models fails the error bound
