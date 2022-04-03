@@ -120,7 +120,6 @@ class CEigNERF(nn.Module):
     def forward(self, x):
         batch_dim = x.shape[0:-2]
 
-        # Is there a smarter way to deal with different batch dimensions?
         if len(batch_dim) > 1:
             x = self.flatten_batch(x)
 
@@ -140,9 +139,10 @@ class CEigNERF(nn.Module):
         if len(batch_dim) >= 1:
             out = nn.Unflatten(0, batch_dim)(out)
             out = nn.Unflatten(-1, ([2, -1]))(out)
+            re_out, im_out = torch.unbind(out, -2)
         else:
             out = nn.Unflatten(0, ([2, -1]))(out)
+            re_out, im_out = torch.unbind(out)
         # Should one do this here, or keep everything real when computing the loss?
-        re_out, im_out = out[:, :, 0], out[:, :, 1]
-        return torch.complex(re_out, im_out)
 
+        return torch.complex(re_out, im_out)

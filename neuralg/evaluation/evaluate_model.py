@@ -3,6 +3,7 @@ import torch
 from ..training.losses import relative_L1_evaluation_error
 from ..training.get_sample import get_sample
 from ..utils.constants import NEURALG_SUPPORTED_OPERATIONS
+from ..training.utils.sorting import real_sort
 
 
 def evaluate_model(model, test_parameters, test_set=None):
@@ -55,7 +56,7 @@ def _evaluate_eigval_model(model, test_set):
     """
     assert test_set is not None, "Test is None"
     assert model is not None, "Model is None"
-    eigvals = torch.sort(torch.real(test_set.Y[0]), 2)[0]
+    eigvals = real_sort(test_set.Y[0])
     predicted_eigvals = model(test_set.X)
     assert predicted_eigvals is not None, "Evaluation non-succesful"
     return relative_L1_evaluation_error(predicted_eigvals, eigvals)
