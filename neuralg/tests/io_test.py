@@ -22,7 +22,7 @@ def test_load_model():
     assert output.__class__.__name__ == "Tensor"
     assert output.shape == torch.Size([1, 1, 3])
 
-    # Non-symmetric matrices
+    # Non-symmetric matrices with potentially complex eigenvalues
     model_name = "c_eigval3"
     model = load_model(model_name)
 

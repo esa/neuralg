@@ -1,8 +1,15 @@
 import numpy as np
 import torch
 
-from neuralg.utils.ModelHandler import ModelHandler
-from neuralg.utils.constants import NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE
+from ..utils.ModelHandler import ModelHandler
+from ..utils.constants import (
+    NEURALG_MIN_SYM_MATRIX_SIZE,
+    NEURALG_MAX_SYM_MATRIX_SIZE,
+    NEURALG_MIN_COMPLEX_MATRIX_SIZE,
+    NEURALG_MAX_COMPLEX_MATRIX_SIZE,
+    NEURALG_MAX_REAL_MATRIX_SIZE,
+    NEURALG_MIN_REAL_MATRIX_SIZE,
+)
 
 
 def test_ModelHandler():
@@ -16,7 +23,9 @@ def test_ModelHandler():
     assert not bool(TestModelHandler.loaded_models)
 
     # Request model for all supported operations
-    supported_sizes = np.arange(NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE + 1)
+    supported_sizes = np.arange(
+        NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
+    )
     ops = ["eigval"]
     loaded_model_count = 0
     for op in ops:

@@ -7,47 +7,53 @@ from ..ops.eig import eig
 from ..utils.constants import (
     NEURALG_MIN_SYM_MATRIX_SIZE,
     NEURALG_MAX_SYM_MATRIX_SIZE,
-    NEURALG_MAX_MATRIX_SIZE,
-    NEURALG_MIN_MATRIX_SIZE,
+    NEURALG_MIN_COMPLEX_MATRIX_SIZE,
+    NEURALG_MAX_COMPLEX_MATRIX_SIZE,
+    NEURALG_MAX_REAL_MATRIX_SIZE,
+    NEURALG_MIN_REAL_MATRIX_SIZE,
 )
 from ..evaluation.evaluate_model import evaluate_model
 from ..evaluation.compute_accuracy import compute_accuracy
 
 
-def test_eig():
+def test_eig(symmetric=False, real=False):
     """Tests if the eig operation works for all supported sizes, symmetric and non-symmetric and is within defined errors bounds. 
     The test set is sampled with a fixed seed. 
     """
 
     # Potentially, I think one will want to expand the error bounds to include more diverse and out-of training examples,
     # depending on the purpose
-
-    for symmetric in [False, True]:
-
+    test_parameters = {"N": 10000, "operation": "eig"}
+    # These are set pretty high right now
+    if symmetric:
         error_bound = 0.9  # Ratio of matrices we require to lie within the tolerance
+        tol = 0.2  # Preliminary tolerace
+        supported_sizes = np.arange(
+            NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
+        )
+        test_parameters[
+            "wigner"
+        ] = True  # Test performance on Wigner matrices with eigvals with variance as in training.
+    elif real:
+        # Mock limits, very very high
+        error_bound = 0.7
+        tol = 0.3  # Preliminary tolerance
+        supported_sizes = np.arange(
+            NEURALG_MIN_REAL_MATRIX_SIZE, NEURALG_MAX_REAL_MATRIX_SIZE + 1
+        )
 
-        # These are set pretty high right now
-        if symmetric:
-
-            tol = 0.2  # Preliminary tolerace
-            supported_sizes = np.arange(
-                NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
-            )
-            test_parameters = {
-                "N": 10000,
-                "operation": "eig",
-                "wigner": True,
-            }  # Test performance on Wigner matrices with eigvals with variance as in training.
-        else:
-            tol = 0.2  # Preliminary tolerance
-            supported_sizes = np.arange(
-                NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE + 1
-            )
-
-            test_parameters = {
-                "N": 10000,
-                "operation": "eig",
-            }  # Test performance on random matrices with uniformly distributed elements
+        test_parameters[
+            "dist"
+        ] = "gaussian"  # Test performance on random matrices with normally distributed eigenvalues
+        test_parameters["symmetric"] = False
+    else:
+        # Mock limits, very very high
+        error_bound = 0.75
+        tol = 0.3  # Preliminary tolerance
+        supported_sizes = np.arange(
+            NEURALG_MIN_COMPLEX_MATRIX_SIZE, NEURALG_MAX_COMPLEX_MATRIX_SIZE + 1
+        )
+        # Test performance on random matrices with uniformly distributed elements
 
         results = DotMap()
         # Track which models fails the error bound
@@ -93,13 +99,16 @@ def test_eig():
         # Chech what,if any, models failed the requirements
         assert (
             sum(results.failed) == 0
-        ), "Error bound not reached: Failed for matrix sizes {} with accuracy {}, resepectively. Symmetric = {}".format(
+        ), "Error bound not reached: Failed for matrix sizes {} with accuracy {}, resepectively. Symmetric = {}, Real = {}".format(
             list(compress(supported_sizes, results.failed)),
             list(compress(results.accuracy, results.failed)),
             str(symmetric),
+            str(real),
         )
 
 
 if __name__ == "__main__":
+    test_eig(symmetric=True)
+    test_eig(real=True)
     test_eig()
 
