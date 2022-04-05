@@ -3,6 +3,7 @@ from loguru import logger
 
 # Add exposed features here
 from .ops.eig import eig
+from .ops.svd import svd
 from .utils.ModelHandler import ModelHandler
 from .utils.set_log_level import set_log_level
 from .utils.set_precision import set_precision
@@ -30,4 +31,5 @@ __all__ = [
     "set_precision",
     "set_log_level",
     "set_up_torch",
+    "svd",
 ]

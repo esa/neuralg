@@ -22,6 +22,11 @@ def evaluate_model(model, test_parameters, test_set=None):
         test_set = _get_test_set(tp)
         test_set.compute_labels()
         results = _evaluate_eigval_model(model, test_set)
+    elif test_parameters["operation"] == "svd":
+        tp["operation"] = torch.linalg.svdvals
+        test_set = _get_test_set(tp)
+        test_set.compute_labels()
+        results = _evaluate_svd_model(model, test_set)
     else:
         raise NotImplementedError(
             "Evaluation for this operation is not supported, must be one of {}".format(
@@ -54,9 +59,24 @@ def _evaluate_eigval_model(model, test_set):
     Returns:
         tensor: Relative L1 norm of the difference between predicted and true eigenvalues of the test set matrices
     """
-    assert test_set is not None, "Test is None"
-    assert model is not None, "Model is None"
     eigvals = real_sort(test_set.Y[0])
     predicted_eigvals = model(test_set.X)
     assert predicted_eigvals is not None, "Evaluation non-succesful"
     return relative_L1_evaluation_error(predicted_eigvals, eigvals)
+
+
+def _evaluate_svd_model(model, test_set):
+    """Computes relative L1 norm of evaluation error for singular valure predictions
+
+    Args:
+        model (nn.torch): Model to evaluate
+        test_set (RandomMatrixDataSet): Data set to evaluate model on
+
+    Returns:
+        tensor: Relative L1 norm of the difference between predicted and true singular values of the test set matrices
+    """
+    singvals = test_set.Y
+    predicted_singvals = model(test_set.X)
+    assert predicted_singvals is not None, "Evaluation non-succesful"
+    return relative_L1_evaluation_error(predicted_singvals, singvals)
+
