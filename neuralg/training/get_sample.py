@@ -20,7 +20,12 @@ def get_sample(matrix_parameters):
         M = RandomMatrixDataSet(N, dim)
 
     if "dist" in matrix_parameters:
-        M.from_dist(matrix_parameters["dist"])
+        if "symmetric" in matrix_parameters:
+            M.from_dist(
+                matrix_parameters["dist"], symmetric=matrix_parameters["symmetric"]
+            )
+        else:
+            M.from_dist(matrix_parameters["dist"])
     else:
         if "normal" in matrix_parameters:
             # Create matrices with iid gaussian entries
