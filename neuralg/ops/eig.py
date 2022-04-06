@@ -22,10 +22,10 @@ def eig(A, symmetric=False, real=False):
     # Load the right model via model handler
     if symmetric:
         model = neuralg.neuralg_ModelHandler.get_model("eigval", matrix_size)
-    elif real and not symmetric:
+    elif real:
         model = neuralg.neuralg_ModelHandler.get_model("r_eigval", matrix_size)
     else:
         model = neuralg.neuralg_ModelHandler.get_model("c_eigval", matrix_size)
-    # Evaluate model on input
-    out = model(A)
+
+    out = model(A)  # Evaluate model on input
     return out
