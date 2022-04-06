@@ -69,7 +69,7 @@ NB Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- I
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
 
 ### Test 
-After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- At least I think so? Or should it be in the tests directory?!>
+After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- At least I think so? Or should it be in the tests directory?!-->
 
 ```sh
 pytest
@@ -80,7 +80,7 @@ pytest
 ### Support
 Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices of float dtype. Supported outputs are float and cfloat dtypes.
 ### Small example
-The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. What follows here is a small example showing how neuralg can be used to find the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [insertlinktoexampleproblemnotebook] 
+The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. What follows here is a small example showing how neuralg can be used to find the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
 
 ```python
 
@@ -92,7 +92,7 @@ neuralg.set_up_torch(enable_cuda = True)
 
 # Sample a batch of matrices with uniform iid coefficients
 # Note that neuralg only supports input of tensor type 
-batch_size, matrix_size = 10000, 15
+batch_size, matrix_size = 10000, 5
 matrix_batch = torch.rand(batch_size,matrix_size,matrix_size)
 
 # Call neuralg to approximate eigenvalues 
@@ -100,11 +100,11 @@ eigenvalues = eig(matrix_batch)
 
 ```
 <!-- All available linear algebra operations are [insertlink].-->
-### Training distribution
-Current available models have been trained and evaluated on random matrices. neuralg also supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to [insertlinktotrainingtutorialnotebook] for a thorough how-to guide.
-#### eig
-<!-- Subject to change-->
- <span style="color:red"> The underlying training distribution for models supporting symmetric matrices are symmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3, <!--$ \lambda_i \sim N(0, \sigma_{train}^2)$ --> and eigenvectors uniformly distributed on the unit sphere. 
- Models supporting non-symmetric matrices with real eigenvalues are trained on asymmetric real valued matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3.
- Models supporting non-symmetric matrices were trained on real valued matrices with i.i.d. uniformly distributed elements on [-10,10].
-  </span>
+### Training distributions
+Current available models have been trained and evaluated on random quadratic matrices. For details, see specifications for corresponding operations and matrix types. Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
+| **function call**            | **training distribution**                                                                                                                                           |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `eig(x,symmetric = True)`    | Real valued symmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
+| `eig(x,real = True)`         | Real valued asymmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3.                                                          |
+| `eig(x)`                     | Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                                                                        |
+| `svd(x)`                     | Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                                                                        |
