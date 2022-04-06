@@ -9,6 +9,8 @@ from ..utils.constants import (
     NEURALG_MAX_COMPLEX_MATRIX_SIZE,
     NEURALG_MAX_REAL_MATRIX_SIZE,
     NEURALG_MIN_REAL_MATRIX_SIZE,
+    NEURALG_MAX_SVD_MATRIX_SIZE,
+    NEURALG_MIN_SVD_MATRIX_SIZE,
 )
 
 
@@ -22,13 +24,22 @@ def test_ModelHandler():
     # Check no models are loaded when a new handler is initialized
     assert not bool(TestModelHandler.loaded_models)
 
+    # Define all supported model names and matrix size bounds
+    ops = {
+        "eigval": np.arange(
+            NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
+        ),
+        "r_eigval": np.arange(
+            NEURALG_MIN_REAL_MATRIX_SIZE, NEURALG_MAX_REAL_MATRIX_SIZE + 1
+        ),
+        "c_eigval": np.arange(
+            NEURALG_MIN_COMPLEX_MATRIX_SIZE, NEURALG_MAX_COMPLEX_MATRIX_SIZE + 1
+        ),
+        "svd": np.arange(NEURALG_MIN_SVD_MATRIX_SIZE, NEURALG_MAX_SVD_MATRIX_SIZE + 1),
+    }
     # Request model for all supported operations
-    supported_sizes = np.arange(
-        NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
-    )
-    ops = ["eigval"]
     loaded_model_count = 0
-    for op in ops:
+    for op, supported_sizes in ops.items():
         for matrix_size in supported_sizes:
             # Request a model
             m = TestModelHandler.get_model(op, matrix_size)
