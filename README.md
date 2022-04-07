@@ -1,4 +1,17 @@
 # neuralg
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/gomezz/neuralg">
+    <img src="test_neuralg_logo.png" alt="Logo"  width="240" height="120">
+  </a>
+  <p align="center">
+    Neural network approximators of linear algebra operations on GPU with PyTorch,
+    <br />
+    <a href="https://github.com/gomezz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a>
+  </p>
+</p>
+
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
