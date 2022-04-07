@@ -80,7 +80,7 @@ pytest
 ### Support
 Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices of float dtype. Supported outputs are float and cfloat dtypes.
 ### Small example
-The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. What follows here is a small example showing how neuralg can be used to find the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
+The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
 
 ```python
 
@@ -102,9 +102,9 @@ eigenvalues = eig(matrix_batch)
 <!-- All available linear algebra operations are [insertlink].-->
 ### Training distributions
 Current available models have been trained and evaluated on random quadratic matrices. For details, see specifications for corresponding operations and matrix types. Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
-| **function call**            | **training distribution**                                                                                                                                           |
-|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `eig(x,symmetric = True)`    | Real valued symmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
-| `eig(x,real = True)`         | Real valued asymmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3.                                                          |
-| `eig(x)`                     | Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                                                                        |
-| `svd(x)`                     | Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                                                                        |
+|     **function call**     | **supported sizes** |                                                              **training matrix distribution**                                                              |
+|:-------------------------:|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `eig(x,symmetric = True)` |        [3,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
+|    `eig(x,real = True)`   |        [3,10]       |                         Real valued asymmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3.                         |
+|          `eig(x)`         |        [3,5]        |                                        Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                        |
+|          `svd(x)`         |        [3,20]       |                                        Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                        |
