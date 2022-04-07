@@ -13,7 +13,7 @@ def evaluate_model(model, test_parameters, test_set=None):
         test_parameters (dict): parameters specifying what matrices to generate
         test_set (torch.Tensor, optional): Predefined test set of matrices
     Returns:
-        dict : Resulting errors from model predictions on test set
+        tensor : Resulting errors from model predictions on test set
     """
     assert model is not None, "Model should be torch.nn type, not None type"
     tp = deepcopy(test_parameters)

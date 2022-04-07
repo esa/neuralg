@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import torch
 from ...utils.constants import (
     NEURALG_MIN_SYM_MATRIX_SIZE,
@@ -13,9 +12,21 @@ from ...utils.constants import (
 )
 
 
-def validate_input(input, operation, symmetric=None, real=None):
+def validate_input(input, operation, symmetric=False, real=False):
+    """ Checks that the input is valid for the requested operation
+
+    Args:
+        input (tensor): Input to be validated 
+        operation (str): Operation requested for the input, e.g. eig or svd. 
+        symmetric (bool, optional): Only applies to eig operation. Defaults to None.
+        real (bool, optional): Only applies to eig operation. Defaults to None.
+
+    Raises:
+        ValueError: If the operation is not supported for the passed input shape and type 
+    """
 
     _general_validation(input)
+
     if operation == "eig":
         _validate_eig_input(input, symmetric, real)
     elif operation == "svd":
@@ -64,6 +75,16 @@ def _validate_svd_input(input):
 
 
 def _validate_support(input, min_size, max_size):
+    """Checks if the input matrix size is supported
+
+    Args:
+        input (tensor): Input to be validated
+        min_size (int): Minimium supported matrix size
+        max_size (int): Minimium supported matrix size
+
+    Raises:
+        ValueError: If matrix size is out of bounds
+    """
     if input.shape[-1] < min_size or input.shape[-1] > max_size:
         raise ValueError(
             "Matrix dimension for requested operation must be between {} and {}, but had dimension"

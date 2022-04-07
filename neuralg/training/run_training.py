@@ -23,11 +23,9 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
     """
     pred = model(batch.X)
 
-    if loss_fcn == eigval_L1:
+    if batch.operation == torch.linalg.eig:
         batch.compute_labels()
-        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[
-            0
-        ]  # abs_sort(batch.Y[0])
+        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[0]
         loss = loss_fcn(pred, sorted_eigvals)
     else:
         batch.compute_labels()
@@ -80,6 +78,8 @@ def run_training(train_cfg):
     matrix_parameters = deepcopy(train_cfg.batch_parameters)
     if matrix_parameters["operation"] == "eig":
         matrix_parameters["operation"] = torch.linalg.eig
+    elif matrix_parameters["operation"] == "svd":
+        matrix_parameters["operation"] = torch.linalg.svdvals
 
     train_cfg, optimizer, scheduler = _init_training(train_cfg)
 
@@ -129,10 +129,8 @@ def run_training(train_cfg):
             if i % 100 == 0:
                 pred_on_eval = train_cfg.model(eval_set.X)
                 eval_set.compute_labels()
-                if loss_fcn == eigval_L1:
-                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[
-                        0
-                    ]  # abs_sort(eval_set.Y[0])
+                if eval_set.operation == torch.linalg.eig:
+                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
                     eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)
                 else:
                     eval_loss = loss_fcn(pred_on_eval, eval_set.Y)
