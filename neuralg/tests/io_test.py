@@ -1,6 +1,6 @@
 import torch
-from neuralg.io.load_model import load_model
-from neuralg.utils.count_parameters import count_parameters
+from ..io.load_model import load_model
+from ..utils.count_parameters import count_parameters
 
 
 def test_load_model():

@@ -49,7 +49,7 @@ def _test_eig(symmetric=False, real=False):
     elif real:
         # Mock limits, very very high
         error_bound = 0.7
-        tol = 0.35  # Preliminary tolerance
+        tol = 0.38  # Preliminary tolerance
         supported_sizes = np.arange(
             NEURALG_MIN_REAL_MATRIX_SIZE, NEURALG_MAX_REAL_MATRIX_SIZE + 1
         )

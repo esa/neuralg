@@ -30,7 +30,10 @@ def get_sample(matrix_parameters):
         if "normal" in matrix_parameters:
             # Create matrices with iid gaussian entries
             if matrix_parameters["normal"]:
-                M.from_randn()
+                if "sigma" in matrix_parameters:
+                    M.from_randn(sigma=matrix_parameters["sigma"])
+                else:
+                    M.from_randn()
         else:
             # Otherwise just sample a matrix with uniform iid entries
             M.from_rand()  # M.from_randn() #fix so one can choose between these
