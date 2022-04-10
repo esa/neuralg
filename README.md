@@ -6,9 +6,9 @@
     <img src="test_neuralg_logo.png" alt="Logo"  width="240" height="120">
   </a>
   <p align="center">
-    Neural network approximators of linear algebra operations on GPU with PyTorch,
+    Neural network approximators of linear algebra operations on GPU with PyTorch
     <br />
-    <a href="https://github.com/gomezz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a>
+    <a href="https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a>
   </p>
 </p>
 
@@ -91,7 +91,7 @@ pytest
 <!-- USAGE EXAMPLES -->
 ## Usage
 ### Support
-Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices of float dtype. Supported outputs are float and cfloat dtypes.
+Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices of float dtype. Supported outputs are float and complexfloat dtypes.
 ### Small example
 The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
 
@@ -101,7 +101,7 @@ import torch
 import neuralg 
 from neuralg import eig 
 # Enable GPU support if available 
-neuralg.set_up_torch(enable_cuda = True)
+neuralg.set_up_torch(torch_enable_cuda = True)
 
 # Sample a batch of matrices with uniform iid coefficients
 # Note that neuralg only supports input of tensor type 
@@ -109,7 +109,12 @@ batch_size, matrix_size = 10000, 5
 matrix_batch = torch.rand(batch_size,matrix_size,matrix_size)
 
 # Call neuralg to approximate eigenvalues 
-eigenvalues = eig(matrix_batch)
+eigvals = eig(matrix_batch) # outputs are torch.complexfloat dtype
+
+# Construct symmetric matrices
+symmetric_matrix_batch = torch.triu(matrix_batch, 0) + torch.transpose(torch.triu(matrix_batch, 1),1,2) 
+# Symmetric matrices have specialized appproximators
+eigvals_sym =  eig(symmetric_matrix_batch, symmetric = True) # output are torch.float dtype
 
 ```
 <!-- All available linear algebra operations are [insertlink].-->
