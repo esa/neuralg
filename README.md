@@ -36,8 +36,10 @@
      <ul>
         <li><a href="#support">Support</a></li>
         <li><a href="#small-example">Small example</a></li>
-        <li><a href="#training-distribution">Training distribution</a></li>
+        <li><a href="#training-distributions">Training distributions</a></li>
       </ul>
+    </li>
+    <li><a href="#license">License </a>
     </li>
   <ol>
 </details>
@@ -65,7 +67,7 @@ This project is built with the following packages:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-What follows a short guide for setting up neuralg on your device.
+Below is a short guide for setting up neuralg on your device.
 
 ### Prerequisites
 <!-- Should there be anything in this entry? Like Install CUDA, if your machine has a CUDA-enabled GPU?  -->
@@ -76,7 +78,7 @@ To install neuralg via pip, run
    pip install neuralg
    ```
 
-NB Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Is this true? -->
+Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Is this true? -->
 
 **GPU Utilization**
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
@@ -123,11 +125,11 @@ Current available models have been trained and evaluated on random quadratic mat
 |     **function call**     | **supported sizes** |                                                              **training matrix distribution**                                                              |
 |:-------------------------:|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | `eig(x,symmetric = True)` |        [3,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
-|    `eig(x,real = True)`   |        [3,10]       |                         Real valued asymmetric matrices with i.i.d. centered normally distributed eigenvalues with variance 100/3.                         |
-|          `eig(x)`         |        [3,5]        |                                        Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                        |
-|          `svd(x)`         |        [3,20]       |                                        Real valued matrices with i.i.d. uniformly distributed elements on [-10,10].                                        |
+|    `eig(x,real = True)`   |        [3,10]       |                         Real valued with i.i.d. centered normally distributed eigenvalues with variance 100/3.                         |
+|          `eig(x)`         |        [3,5]        |                                        Real valued with i.i.d. uniformly distributed elements on [-10,10].                                        |
+|          `svd(x)`         |        [3,10]       |                                        Real valued with i.i.d. uniformly distributed elements on [-10,10].                                        |
 
     
 ## License
 
-Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/gomezzz/neuralg/LICENSE) for more information.
+Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/gomezzz/neuralg/LICENSE) <!-- Change this link -->for more information.
