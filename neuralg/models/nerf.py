@@ -1,7 +1,6 @@
 # From https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py,
 # Implementation of architecture from "NeRF: Representing Scenes as
 # Neural Radiance Fields for View Synthesis" , https://arxiv.org/pdf/2003.08934.pdf
-
 import torch
 import torch.nn as nn
 
@@ -43,7 +42,10 @@ class EigNERF(nn.Module):
             self.out_features = matrix_dimension  # For e.g. full eigval problem
 
         self.net = nn.ModuleList()
-        self.flatten = nn.Flatten(start_dim=1)
+        # Added this for more robust against different batch dimensions
+        self.flatten_batch = nn.Flatten(start_dim=0, end_dim=-3)
+        self.flatten = nn.Flatten(start_dim=-2)
+
         self.net.append(NERFLayer(in_features, n_neurons))
 
         for i in range(hidden_layers):
@@ -52,21 +54,28 @@ class EigNERF(nn.Module):
             else:
                 self.net.append(NERFLayer(n_neurons, n_neurons))
 
-        self.net.append(nn.Linear(n_neurons, self.out_features))
+        self.net.append(nn.Linear(n_neurons, matrix_dimension))
 
     def forward(self, x):
-        x = self.flatten(x)
+        batch_dim = x.shape[0:-2]
+
+        # Is there a smarter way to deal with different batch dimensions?
+        if len(batch_dim) > 1:
+            x = self.flatten_batch(x)
+
+        x_flat = self.flatten(x)
+
         # save for skip connection
-        identity = x
+        identity = x_flat
 
         # compute first layer
-        out = self.net[0].forward(x)
+        out = self.net[0].forward(x_flat)
 
         # compute all other layers and apply skip where requested
         for layer_idx in range(1, len(self.net)):
             out = self.net[layer_idx].forward(out)
             if layer_idx in self.skip:
-                out = torch.cat([out, identity], dim=1)
-
-        return out[:, None, :]  # Dummy index to fit framework
-
+                out = torch.cat([out, identity], dim=-1)
+        if len(batch_dim) > 1:
+            out = nn.Unflatten(0, batch_dim)(out)
+        return out

@@ -1,3 +1,4 @@
+from cmath import sqrt
 import torch
 from neuralg.training.RandomSymmetricMatrix import RandomSymmetricMatrix
 
@@ -15,8 +16,8 @@ class RandomMatrixDataSet:
     def from_rand(self, r1=-10, r2=10):
         self.X = (r1 - r2) * torch.rand(self.N, 1, self.d, self.d) + r2
 
-    def from_randn(self):
-        self.X = torch.randn(self.N, 1, self.d, self.d)
+    def from_randn(self, sigma=10 / sqrt(3)):
+        self.X = sigma * torch.randn(self.N, 1, self.d, self.d)
 
     def from_dist(self, dist):
         self.X = RandomSymmetricMatrix(N=self.N, d=self.d, dist=dist).X

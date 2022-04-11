@@ -59,9 +59,8 @@ class ModelHandler:
         """ Frees allocated memory from loaded models
         """
         logger.info("Clearing loaded models")
-        loaded_models_copy = deepcopy(self.loaded_models)
+        loaded_models_copy = deepcopy(list(self.loaded_models.keys()))
         for model in loaded_models_copy:
             del self.loaded_models[model]
         del loaded_models_copy  # Not sure if needed
-        None
 

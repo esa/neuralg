@@ -20,11 +20,11 @@ def evaluate(run_cfg):
 
     for j in range(no_models):
         d = ms[j]  # Matrix dimension
-        model = run_cfg[str(d)].model
-        run_cfg[str(d)] = deepcopy(_load_test_settings(run_cfg[str(d)]))
+        model = run_cfg[d].model
+        run_cfg[d] = deepcopy(_load_test_settings(run_cfg[d]))
         # Initialize a DotMap for every different test set setting
-        run_cfg[str(d)].test_results = DotMap()
-        temp_test_settings = deepcopy(run_cfg[str(d)].test_cfg.test_settings)
+        run_cfg[d].test_results = DotMap()
+        temp_test_settings = deepcopy(run_cfg[d].test_cfg.test_settings)
 
         for i, k in enumerate(temp_test_settings):
             test_parameters = temp_test_settings[k]
@@ -32,10 +32,10 @@ def evaluate(run_cfg):
 
             results = evaluate_model(model, test_parameters)
             acc = []
-            for tol in run_cfg[str(d)].test_cfg.tolerances:
+            for tol in run_cfg[d].test_cfg.tolerances:
                 acc.append(compute_accuracy(tol, results).item())
 
-            run_cfg[str(d)].test_results[k] = acc
+            run_cfg[d].test_results[k] = acc
 
     return run_cfg
 

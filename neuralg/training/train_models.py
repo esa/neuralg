@@ -35,7 +35,7 @@ def train_models(cfg, save_training_run=False):
             raise NotImplementedError("Model type is not available for training")
         temp_config.model = model
         logger.trace("Calling training for matrix size {}".format(d))
-        run_results[str(d)] = run_training(temp_config)
+        run_results[d] = run_training(temp_config)
 
     logger.trace("Finalized training all requested models...")
     # For plotting
