@@ -25,10 +25,10 @@ def compare_eig_run(run_cfg, symmetric, real, tol=0.05):
     return _compare_with_neuralg(run_cfg, op, test_parameters, tol)
 
 
-def compare_svd_run(run_cfg):
+def compare_svd_run(run_cfg, tol=0.05):
     test_parameters = {"N": 10000, "operation": "svd"}
     op = svd
-    return _compare_with_neuralg(run_cfg, op, test_parameters)
+    return _compare_with_neuralg(run_cfg, op, test_parameters, tol)
 
 
 def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
