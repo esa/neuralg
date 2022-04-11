@@ -1,6 +1,6 @@
-from xml.dom import NotFoundErr
 import neuralg
 from .utils.validate_input import validate_input
+from .utils.predict import predict
 
 
 def svd(A, custom_model_name=None):
@@ -21,6 +21,6 @@ def svd(A, custom_model_name=None):
     model = neuralg.neuralg_ModelHandler.get_model(
         "svd", matrix_size, custom_model_name
     )  # Load the right model via model handler
-    out = model(A)  # Evaluate model on input
+    out = predict(model, A)  # Evaluate model on input
     return out
 

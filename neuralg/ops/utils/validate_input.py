@@ -1,4 +1,7 @@
 import torch
+import neuralg
+from ...utils.set_log_level import set_log_level
+from loguru import logger
 from ...utils.constants import (
     NEURALG_MIN_SYM_MATRIX_SIZE,
     NEURALG_MAX_SYM_MATRIX_SIZE,
@@ -26,6 +29,8 @@ def validate_input(input, operation, symmetric=False, real=False):
     """
 
     _general_validation(input)
+    if neuralg.neuralg_SAFEMODE:
+        _safety_check(input)
 
     if operation == "eig":
         _validate_eig_input(input, symmetric, real)
@@ -87,8 +92,10 @@ def _validate_support(input, min_size, max_size):
     """
     if input.shape[-1] < min_size or input.shape[-1] > max_size:
         raise ValueError(
-            "Matrix dimension for requested operation must be between {} and {}, but had dimension"
-            + str(input.shape[-1]).format(min_size, max_size)
+            "Matrix dimension for requested operation must be between {} and {}, but had dimension: ".format(
+                min_size, max_size
+            )
+            + str(input.shape[-1])
         )
 
 
@@ -111,3 +118,14 @@ def _general_validation(input):
         )
     if input.shape[-2] != input.shape[-1]:
         raise ValueError("Matrices must be quadratic but had shape" + str(input.shape))
+
+
+def _safety_check(input):
+    max_lim = 1e16
+    set_log_level("WARNING")
+    if torch.isnan(input).sum() != 0:  # Should this throw error or just log warning?
+        logger.warning("Discovered NaN input")
+    if input.abs.max() > max_lim:
+        logger.warning(
+            f"Input elements exceeds {max_lim} in absolute value. Might yield unexpected output"
+        )

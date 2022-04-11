@@ -1,4 +1,4 @@
-import torch
+from .utils.predict import predict
 import neuralg
 from .utils.validate_input import validate_input
 
@@ -33,5 +33,5 @@ def eig(A, symmetric=False, real=False, custom_model_name=None):
             "c_eigval", matrix_size, custom_model_name
         )
 
-    out = model(A)  # Evaluate model on input
+    out = predict(model, A)  # Evaluate model on input
     return out
