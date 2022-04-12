@@ -121,11 +121,22 @@ def _general_validation(input):
 
 
 def _safety_check(input):
+    """Run safety check on model inputs. 
+
+    Args:
+        input (tensor): Input tensor to check
+
+    Raises:
+        ValueError: If NaN input
+
+    Yields:
+        Warning: If input elements exceed 1e16 in abolute value
+    """
     max_lim = 1e16
     set_log_level("WARNING")
-    if torch.isnan(input).sum() != 0:  # Should this throw error or just log warning?
-        logger.warning("Discovered NaN input")
-    if input.abs.max() > max_lim:
+    if torch.isnan(input).sum() != 0:
+        raise ValueError("NaN input not supported")
+    if input.abs().max() > max_lim:
         logger.warning(
-            f"Input elements exceeds {max_lim} in absolute value. Might yield unexpected output"
+            f"Input elements exceed {max_lim} in absolute value. Might yield unexpected output"
         )

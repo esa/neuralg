@@ -1,4 +1,5 @@
 import neuralg
+import torch
 from loguru import logger
 from ...utils.set_log_level import set_log_level
 
@@ -26,7 +27,9 @@ def _check_output(out):
         out (tensor): Output tensor to check 
     """
     set_log_level("WARNING")
+    if torch.isnan(out).sum() != 0:
+        logger.warning(f"Output is NaN ")
     max_lim = 1e16
     if out.abs().max() > max_lim:
-        logger.warning(f"Output elements exceeds {max_lim} in modulus")
+        logger.warning(f"Output elements exceed {max_lim} in modulus")
 
