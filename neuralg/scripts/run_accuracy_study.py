@@ -1,5 +1,5 @@
 from dotmap import DotMap
-from utils.set_up_torch import set_up_torch
+from ..utils.set_up_torch import set_up_torch
 from ..utils.count_parameters import count_parameters
 from ..models.nerf import EigNERF
 from ..models.siren import EigSiren
