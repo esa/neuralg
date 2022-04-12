@@ -29,6 +29,7 @@ class EigNERF(nn.Module):
         n_neurons=200,
         out_features=None,
         hidden_layers=8,
+        activation=nn.ReLU(),
     ):
         super().__init__()
         self.model_type = "nerf"
@@ -46,13 +47,15 @@ class EigNERF(nn.Module):
         self.flatten_batch = nn.Flatten(start_dim=0, end_dim=-3)
         self.flatten = nn.Flatten(start_dim=-2)
 
-        self.net.append(NERFLayer(in_features, n_neurons))
+        self.net.append(NERFLayer(in_features, n_neurons, activation=activation))
 
         for i in range(hidden_layers):
             if i in self.skip:
-                self.net.append(NERFLayer(n_neurons + in_features, n_neurons))
+                self.net.append(
+                    NERFLayer(n_neurons + in_features, n_neurons, activation=activation)
+                )
             else:
-                self.net.append(NERFLayer(n_neurons, n_neurons))
+                self.net.append(NERFLayer(n_neurons, n_neurons, activation=activation))
 
         self.net.append(nn.Linear(n_neurons, matrix_dimension))
 

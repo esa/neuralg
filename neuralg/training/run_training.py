@@ -25,7 +25,9 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
 
     if batch.operation == torch.linalg.eig:
         batch.compute_labels()
-        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[0]
+        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[
+            0
+        ]  # real_sort( batch.Y[0])
         loss = loss_fcn(pred, sorted_eigvals)
     else:
         batch.compute_labels()
@@ -130,7 +132,9 @@ def run_training(train_cfg):
                 pred_on_eval = train_cfg.model(eval_set.X)
                 eval_set.compute_labels()
                 if eval_set.operation == torch.linalg.eig:
-                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
+                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[
+                        0
+                    ]  # real_sort(eval_set.Y[0])
                     eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)
                 else:
                     eval_loss = loss_fcn(pred_on_eval, eval_set.Y)
