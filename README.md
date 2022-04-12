@@ -8,7 +8,7 @@
   <p align="center">
     Neural network approximators of linear algebra operations on GPU with PyTorch
     <br />
-    <a href="https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a>
+    <a href="https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a> <!-- Update for final version -->
   </p>
 </p>
 
@@ -34,9 +34,9 @@
     </li>
     <li><a href="#usage">Usage</a>
      <ul>
-        <li><a href="#support">Support</a></li>
         <li><a href="#small-example">Small example</a></li>
-        <li><a href="#training-distributions">Training distributions</a></li>
+        <li><a href="#support-and-training-distributions">Support and training distributions</a></li>
+        <li><a href="#customized-models">Cutomized models</a></li>
       </ul>
     </li>
     <li><a href="#license">License </a>
@@ -47,7 +47,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About 
 
-The neuralg module is a neural network based collection of approximators to common numerical linear algebra operations. It allows utilizing GPUs for differentiable and efficient computation used together with [PyTorch](https://pytorch.org/). 
+The `neuralg` module is a neural-network-based collection of approximators for common numerical linear algebra operations such as eigenvalue or singular value computation. It allows utilizing GPUs for differentiable and efficient computation with [PyTorch](https://pytorch.org/). This also supports maintaining stable gradient flows. 
 
 The software is free to use and is designed for the machine learning community in general, and users focusing on topics involving numerical linear algebra in particular.
 
@@ -70,7 +70,7 @@ This project is built with the following packages:
 Below is a short guide for setting up neuralg on your device.
 
 ### Prerequisites
-<!-- Should there be anything in this entry? Like Install CUDA, if your machine has a CUDA-enabled GPU?  -->
+Users who want to use the GPU needs to set up CUDA including installing a [cudatoolkit](https://developer.nvidia.com/cuda-downloads).
 ### Installation
 
 To install neuralg via pip, run
@@ -78,13 +78,13 @@ To install neuralg via pip, run
    pip install neuralg
    ```
 
-Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Is this true? -->
+Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Double check for final version-->
 
 **GPU Utilization**
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
 
 ### Test 
-After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- At least I think so? Or should it be in the tests directory?!-->
+After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- Double-check in final version -->
 
 ```sh
 pytest
@@ -92,8 +92,7 @@ pytest
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-### Support
-Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices of float dtype. Supported outputs are float and complexfloat dtypes.
+
 ### Small example
 The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
 
@@ -119,16 +118,18 @@ symmetric_matrix_batch = torch.triu(matrix_batch, 0) + torch.transpose(torch.tri
 eigvals_sym =  eig(symmetric_matrix_batch, symmetric = True) # output are torch.float dtype
 
 ```
-<!-- All available linear algebra operations are [insertlink].-->
-### Training distributions
-Current available models have been trained and evaluated on random quadratic matrices. For details, see specifications for corresponding operations and matrix types. Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
-|     **function call**     | **supported sizes** |                                                              **training matrix distribution**                                                              |
-|:-------------------------:|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `eig(x,symmetric = True)` |        [3,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
-|    `eig(x,real = True)`   |        [3,10]       |                         Real valued with i.i.d. centered normally distributed eigenvalues with variance 100/3.                         |
-|          `eig(x)`         |        [3,5]        |                                        Real valued with i.i.d. uniformly distributed elements on [-10,10].                                        |
-|          `svd(x)`         |        [3,10]       |                                        Real valued with i.i.d. uniformly distributed elements on [-10,10].                                        |
 
+### Support and training distributions
+Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices. Current available models have been trained and evaluated on random square matrices. For details, see specifications for corresponding operations and matrix types. 
+|     **function call**     | **supported dtypes**                                                  | **supported sizes** |                                                              **training matrix distribution**                                                              |
+|:-------------------------:|-----------------------------------------------------------------------|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `eig(x,symmetric = True)` | float32 (in / out), float64 (in / out),                               |        [3,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
+|    `eig(x,real = True)`   | float32 (in / out), float64 (in / out),                               |        [3,10]       |                              Real valued asymmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3.                             |
+|          `eig(x)`         | float32 (in), float64 (in), complexfloat64 (out), complexfloat128(out) |        [3,5]        |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |
+|          `svd(x)`         | float32 (in / out), float64 (in / out),                               |        [3,20]       |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |                                    |
+
+### Customized models
+Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
     
 ## License
 
