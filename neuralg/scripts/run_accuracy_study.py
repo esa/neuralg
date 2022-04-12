@@ -1,4 +1,5 @@
 from dotmap import DotMap
+from utils.set_up_torch import set_up_torch
 from ..utils.count_parameters import count_parameters
 from ..models.nerf import EigNERF
 from ..models.siren import EigSiren
@@ -11,7 +12,7 @@ from loguru import logger
 
 def run_accuracy_study(d, model_type, nerf_activation=torch.nn.ReLU()):
     set_log_level("TRACE")
-
+    set_up_torch(torch_enable_cuda=True)
     batch_size = 64
     train_matrix_parameters = DotMap(
         {"N": batch_size, "operation": "eig", "d": d, "wigner": True}
