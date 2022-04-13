@@ -2,16 +2,8 @@ import numpy as np
 import torch
 
 from ..utils.ModelHandler import ModelHandler
-from ..utils.constants import (
-    NEURALG_MIN_SYM_MATRIX_SIZE,
-    NEURALG_MAX_SYM_MATRIX_SIZE,
-    NEURALG_MIN_COMPLEX_MATRIX_SIZE,
-    NEURALG_MAX_COMPLEX_MATRIX_SIZE,
-    NEURALG_MAX_REAL_MATRIX_SIZE,
-    NEURALG_MIN_REAL_MATRIX_SIZE,
-    NEURALG_MAX_SVD_MATRIX_SIZE,
-    NEURALG_MIN_SVD_MATRIX_SIZE,
-)
+
+from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_ModelHandler():
@@ -27,15 +19,18 @@ def test_ModelHandler():
     # Define all supported model names and matrix size bounds
     ops = {
         "eigval": np.arange(
-            NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE + 1
+            MATRIX_SIZES.eig.sym.lower_bound, MATRIX_SIZES.eig.sym.upper_bound + 1
         ),
         "r_eigval": np.arange(
-            NEURALG_MIN_REAL_MATRIX_SIZE, NEURALG_MAX_REAL_MATRIX_SIZE + 1
+            MATRIX_SIZES.eig.real.lower_bound, MATRIX_SIZES.real.sym.upper_bound + 1
         ),
         "c_eigval": np.arange(
-            NEURALG_MIN_COMPLEX_MATRIX_SIZE, NEURALG_MAX_COMPLEX_MATRIX_SIZE + 1
+            MATRIX_SIZES.eig.complex.lower_bound,
+            MATRIX_SIZES.eig.complex.upper_bound + 1,
         ),
-        "svd": np.arange(NEURALG_MIN_SVD_MATRIX_SIZE, NEURALG_MAX_SVD_MATRIX_SIZE + 1),
+        "svd": np.arange(
+            MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound + 1
+        ),
     }
     # Request model for all supported operations
     loaded_model_count = 0
