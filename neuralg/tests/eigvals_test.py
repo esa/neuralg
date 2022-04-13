@@ -1,11 +1,11 @@
 import numpy as np
-from ..ops.eig import eig
+from ..ops.eigvals import eigvals
 from .test_utils import _test_op
 
 from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
-def test_eig():
+def test_eigvals():
     """ Tests if the eig operation works for all supported sizes and is within defined errors bounds, 
     for symmetric, non-symmetric with real eigenvalues and non-symmetric with complex eigenvalues
     """
@@ -50,10 +50,10 @@ def _test_eig(symmetric=False, real=False):
             MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound + 1
         )  # Test performance on random matrices with uniformly distributed elements
 
-    op = lambda x: eig(x, symmetric=symmetric, real=real)
+    op = lambda x: eigvals(x, symmetric=symmetric, real=real)
 
     _test_op(op, supported_sizes, test_parameters, tol, error_bound)
 
 
 if __name__ == "__main__":
-    test_eig()
+    test_eigvals()

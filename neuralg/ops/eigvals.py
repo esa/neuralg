@@ -1,10 +1,11 @@
-import torch
 import neuralg
 from .utils.validate_input import validate_input
 
 
+# import neuralg
+
 # Potentially, we should perhaps call this eigvals, since it only computes eigenvalues
-def eig(A, symmetric=False, real=False):
+def eigvals(A, symmetric=False, real=False):
     """Approximates eigenvalues of a real valued square matrix. 
     Supports batches of matrices, and if A is a batch of matrices then the output has the same batch dimensions. 
     Supports input of float and double dtypes.
@@ -18,7 +19,6 @@ def eig(A, symmetric=False, real=False):
     validate_input(A, operation="eig", symmetric=symmetric, real=real)
 
     matrix_size = A.shape[-1]
-
     # Load the right model via model handler
     if symmetric:
         model = neuralg.neuralg_ModelHandler.get_model("eigval", matrix_size)

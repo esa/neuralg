@@ -2,7 +2,7 @@ import os
 from loguru import logger
 
 # Add exposed features here
-from .ops.eig import eig
+from .ops.eigvals import eigvals
 from .ops.svd import svd
 from .utils.ModelHandler import ModelHandler
 from .utils.set_log_level import set_log_level
@@ -26,7 +26,7 @@ neuralg_ModelHandler = ModelHandler()
 
 
 __all__ = [
-    "eig",
+    "eigvals",
     "clear_loaded_models",
     "set_precision",
     "set_log_level",
