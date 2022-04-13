@@ -1,4 +1,4 @@
-import neuralg
+from .. import neuralg_ModelHandler
 from .utils.validate_input import validate_input
 
 
@@ -15,7 +15,7 @@ def svd(A):
 
     matrix_size = A.shape[-1]
 
-    model = neuralg.neuralg_ModelHandler.get_model(
+    model = neuralg_ModelHandler.get_model(
         "svd", matrix_size
     )  # Load the right model via model handler
     out = model(A)  # Evaluate model on input
