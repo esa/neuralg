@@ -45,10 +45,6 @@ def train_models(cfg, save_training_run=False):
     return run_results
 
 
-def save_models():
-    return None
-
-
 # If we want this as a script. Right now Im calling it as a function
 # if __name__ == "__main__":
 #    cfg = load_default_cfg()

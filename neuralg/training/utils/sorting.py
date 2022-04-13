@@ -12,7 +12,7 @@ def real_sort(tensor, dim=-1):
     Returns:
         tensor: Containing the sorted values of the elements in the original input tensor
     """
-    indices = torch.sort(torch.real(tensor))[1]
+    indices = torch.sort(torch.real(tensor), stable=True)[1]
     t = torch.gather(tensor, dim=dim, index=indices)
     return t
 
