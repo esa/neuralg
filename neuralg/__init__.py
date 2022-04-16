@@ -1,10 +1,14 @@
 import os
 from loguru import logger
 
-# Add exposed features here
-from .ops.eig import eig
-from .ops.svd import svd
+# Initialize global model handler
 from .utils.ModelHandler import ModelHandler
+
+neuralg_ModelHandler = ModelHandler()
+
+# Add exposed features here
+from .ops.eigvals import eigvals
+from .ops.svd import svd
 from .utils.set_log_level import set_log_level
 from .utils.set_precision import set_precision
 from .utils.clear_loaded_models import clear_loaded_models
@@ -24,12 +28,9 @@ logger.info(f"Initialized neuralg for {os.environ['TORCH_DEVICE']}")
 # Set default precision to float32 and uses CUDA if initialized
 set_precision()
 
-# Initialize global model handler
-neuralg_ModelHandler = ModelHandler()
-
 
 __all__ = [
-    "eig",
+    "eigvals",
     "clear_loaded_models",
     "get_model",
     "save_model",

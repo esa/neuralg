@@ -1,13 +1,6 @@
 import torch
 from ...utils.constants import (
-    NEURALG_MIN_SYM_MATRIX_SIZE,
-    NEURALG_MAX_SYM_MATRIX_SIZE,
-    NEURALG_MAX_REAL_MATRIX_SIZE,
-    NEURALG_MIN_REAL_MATRIX_SIZE,
-    NEURALG_MAX_COMPLEX_MATRIX_SIZE,
-    NEURALG_MIN_COMPLEX_MATRIX_SIZE,
-    NEURALG_MAX_SVD_MATRIX_SIZE,
-    NEURALG_MIN_SVD_MATRIX_SIZE,
+    NEURALG_MATRIX_SIZES as MATRIX_SIZES,
     NEURALG_SUPPORTED_OPERATIONS,
 )
 
@@ -49,15 +42,20 @@ def _validate_eig_input(input, symmetric, real):
     Raises:
         ValueError: If matrices are not in supported size span, as defined in global constants
     """
-
     if symmetric:
-        min_size, max_size = NEURALG_MIN_SYM_MATRIX_SIZE, NEURALG_MAX_SYM_MATRIX_SIZE
+        min_size, max_size = (
+            MATRIX_SIZES.eig.sym.lower_bound,
+            MATRIX_SIZES.eig.sym.upper_bound,
+        )
     elif real:
-        min_size, max_size = NEURALG_MIN_REAL_MATRIX_SIZE, NEURALG_MAX_REAL_MATRIX_SIZE
+        min_size, max_size = (
+            MATRIX_SIZES.eig.real.lower_bound,
+            MATRIX_SIZES.eig.real.upper_bound,
+        )
     else:
         min_size, max_size = (
-            NEURALG_MIN_COMPLEX_MATRIX_SIZE,
-            NEURALG_MAX_COMPLEX_MATRIX_SIZE,
+            MATRIX_SIZES.eig.complex.lower_bound,
+            MATRIX_SIZES.eig.complex.upper_bound,
         )
     _validate_support(input, min_size, max_size)
 
@@ -71,7 +69,7 @@ def _validate_svd_input(input):
     Raises:
         ValueError: If matrices are not in supported size span, as defined in global constants
     """
-    _validate_support(input, NEURALG_MIN_SVD_MATRIX_SIZE, NEURALG_MAX_SVD_MATRIX_SIZE)
+    _validate_support(input, MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound)
 
 
 def _validate_support(input, min_size, max_size):
