@@ -46,10 +46,11 @@ class EigSiren(nn.Module):
         outermost_linear=True,
         outermost_activation=nn.Tanh(),
         first_omega_0=1,
-        hidden_omega_0=1.0,
+        hidden_omega_0=30.0,
     ):
 
         super().__init__()
+        self.model_type = "siren"
         self.flatten = nn.Flatten(start_dim=2)
         self.net = []
         self.net.append(

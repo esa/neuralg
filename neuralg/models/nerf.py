@@ -36,6 +36,7 @@ class EigNERF(nn.Module):
         self.matrix_dimension = matrix_dimension
         self.in_features = in_features
         self.skip = skip
+        self.activation = activation
 
         if out_features is not None:
             self.out_features = out_features

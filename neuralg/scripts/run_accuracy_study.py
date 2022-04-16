@@ -20,7 +20,7 @@ def run_accuracy_study(d, model_type, nerf_activation=torch.nn.ReLU()):
 
     run_params = DotMap(
         {
-            "epoch": 10,  # Number of epochs
+            "epoch": 50,  # Number of epochs
             "iterations": 10000,  # Batches per epoch
             "lr": 3e-4,
         }
@@ -61,12 +61,12 @@ def run_accuracy_study(d, model_type, nerf_activation=torch.nn.ReLU()):
 
 
 if __name__ == "__main__":
-    save_run(run_accuracy_study(d=5, model_type="nerf"), subfolder="nerf")
-    save_run(
-        run_accuracy_study(d=5, model_type="nerf", nerf_activation=torch.nn.Sigmoid()),
-        subfolder="nerf",
-    )
-    save_run(run_accuracy_study(d=10, model_type="nerf"), subfolder="nerf")
+    # save_run(run_accuracy_study(d=5, model_type="nerf"), subfolder="nerf")
+    # save_run(
+    #     run_accuracy_study(d=5, model_type="nerf", nerf_activation=torch.nn.Sigmoid()),
+    #     subfolder="nerf",
+    # )
+    # save_run(run_accuracy_study(d=10, model_type="nerf"), subfolder="nerf")
 
     save_run(run_accuracy_study(d=5, model_type="siren"), subfolder="siren")
-    save_run(run_accuracy_study(d=10, model_type="siren"), subfolder="siren")
+    # save_run(run_accuracy_study(d=10, model_type="siren"), subfolder="siren")
