@@ -16,14 +16,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install \
+            git \
+            git-lfs \
         $CONDA/bin/conda env update --file environment.yml --name base
+    - uses: actions/checkout@v2
+      with: 
+        lfs: true
     - name: Test with pytest
       run: |
         conda install pytest
