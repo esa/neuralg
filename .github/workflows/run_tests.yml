@@ -22,10 +22,6 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install \
-            git \
-            git-lfs \
         $CONDA/bin/conda env update --file environment.yml --name base
     - uses: actions/checkout@v2
       with: 
@@ -34,3 +30,6 @@ jobs:
       run: |
         conda install pytest
         $CONDA/bin/pytest
+    - uses: actions/checkout@v2
+      with:
+      lfs: true
