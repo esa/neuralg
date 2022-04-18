@@ -1,13 +1,23 @@
 from .evaluate_model import evaluate_model
 from .compute_accuracy import compute_accuracy
-from ..ops.eig import eig
+from ..ops.eigvals import eigvals
 from ..ops.svd import svd
 from dotmap import DotMap
 from itertools import compress
 
 
 def compare_eig_run(run_cfg, symmetric, real, tol=0.05):
+    """Compare training run results with existing neuralg eigvals() models. Prints wether the run outperforms the module or not.
 
+    Args:
+        run_cfg (DotMap): Post-training run configuration
+        symmetric (bool): Specifies if models in run configuration are specalized to symmetric matrices
+        real (bool): Specifies if models in run configuration are specalized to only predict real eigenvalues.
+        tol (float, optional): Tolerance to compute accuracy with. Defaults to 0.05.
+
+    Returns:
+        DotMap: Results containing computed accuracies and list of bools for eigvals run. True corresponds to improved model perfomance.
+    """
     test_parameters = {"N": 10000, "operation": "eig"}
     if symmetric:
         test_parameters[
@@ -20,18 +30,40 @@ def compare_eig_run(run_cfg, symmetric, real, tol=0.05):
         test_parameters["symmetric"] = False
     # Test performance on random matrices with uniformly distributed elements
 
-    op = lambda x: eig(x, symmetric=symmetric, real=real)
+    op = lambda x: eigvals(x, symmetric=symmetric, real=real)
 
     return _compare_with_neuralg(run_cfg, op, test_parameters, tol)
 
 
 def compare_svd_run(run_cfg, tol=0.05):
+    """Compare training run results with existing neuralg svd() models. Prints wether the run outperforms the module or not.
+    Args:
+        run_cfg (DotMap): Post-training run configuration
+        tol (float, optional): Tolerance to compute accuracy with. Defaults to 0.05.
+
+    Returns:
+        DotMap: Results containing computed accuracies and list of bools for svd run. True corresponds to improved model perfomance.
+
+    """
     test_parameters = {"N": 10000, "operation": "svd"}
     op = svd
     return _compare_with_neuralg(run_cfg, op, test_parameters, tol)
 
 
 def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
+    """Compare training run results with existing neuralg operation with passed test_parameters.
+     Prints wether the run outperforms the module or not.
+
+    Args:
+        run_cfg (DotMap): Post-training run configuration
+        op (function): Neuralg operator to compare with, e.g. svd or eigvals
+        test_parameters (dict): Parameters for test set generation
+        tol (float): Tolerance to compute accuracy with.
+
+    Returns:
+    DotMap: Results containing computed accuracies and list of bools. True corresponds to improved model perfomance.
+
+    """
     ms = run_cfg.matrix_sizes
     no_models = len(ms)
 
@@ -63,6 +95,17 @@ def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
 
 
 def _compare_model(model, op, test_parameters, tol):
+    """Compare a model to neuralg operator with passed test set parameters.
+
+    Args:
+        model (torch.nn): Model to compare to neuralg model
+        op (function): Neuralg operator to compare with, e.g. svd or eigvals
+        test_parameters (dict): Parameters for test set generation
+        tol (float): Tolerance to compute accuracy with.
+
+    Returns:
+        tensor: two tensors containing accuracy results of passed model an neuralg operator.
+    """
     trained_acc = round(
         compute_accuracy(tol, evaluate_model(model, test_parameters)).item(), 3
     )
@@ -70,4 +113,3 @@ def _compare_model(model, op, test_parameters, tol):
         compute_accuracy(tol, evaluate_model(op, test_parameters)).item(), 3
     )
     return trained_acc, neuralg_acc
-

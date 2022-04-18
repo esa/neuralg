@@ -11,7 +11,7 @@ NEURALG_MATRIX_SIZES.eig.real.upper_bound = 10
 NEURALG_MATRIX_SIZES.eig.complex.lower_bound = 2
 NEURALG_MATRIX_SIZES.eig.complex.upper_bound = 5
 
-NEURALG_MATRIX_SIZES.svd.lower_bound = 3
+NEURALG_MATRIX_SIZES.svd.lower_bound = 2
 NEURALG_MATRIX_SIZES.svd.upper_bound = 20
 
 
