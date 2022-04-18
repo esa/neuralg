@@ -1,5 +1,5 @@
 import torch
-import neuralg
+
 from ...utils.set_log_level import set_log_level
 from loguru import logger
 from ...utils.constants import (
@@ -9,21 +9,19 @@ from ...utils.constants import (
 
 
 def validate_input(input, operation, symmetric=False, real=False):
-    """ Checks that the input is valid for the requested operation
+    """Checks that the input is valid for the requested operation
 
     Args:
-        input (tensor): Input to be validated 
-        operation (str): Operation requested for the input, e.g. eig or svd. 
+        input (tensor): Input to be validated
+        operation (str): Operation requested for the input, e.g. eig or svd.
         symmetric (bool, optional): Only applies to eig operation. Defaults to None.
         real (bool, optional): Only applies to eig operation. Defaults to None.
 
     Raises:
-        ValueError: If the operation is not supported for the passed input shape and type 
+        ValueError: If the operation is not supported for the passed input shape and type
     """
 
     _general_validation(input)
-    if neuralg.neuralg_SAFEMODE:
-        _safety_check(input)
 
     if operation == "eig":
         _validate_eig_input(input, symmetric, real)
@@ -36,9 +34,11 @@ def validate_input(input, operation, symmetric=False, real=False):
             )
         )
 
+    _safety_check(input)
+
 
 def _validate_eig_input(input, symmetric, real):
-    """ Checks that the eig operation is supported for the passed matrix size.
+    """Checks that the eig operation is supported for the passed matrix size.
     Args:
         input (tensor): Batch to be validated for eigenvalue approximation
         symmetric (bool): Specifying if matrix is symmetric.
@@ -98,7 +98,7 @@ def _validate_support(input, min_size, max_size):
 
 
 def _general_validation(input):
-    """ Checks that the input has correct shape.
+    """Checks that the input has correct shape.
     Args:
         input (tensor): Batch to be validated
 
@@ -119,7 +119,7 @@ def _general_validation(input):
 
 
 def _safety_check(input):
-    """Run safety check on model inputs. 
+    """Run safety check on model inputs.
 
     Args:
         input (tensor): Input tensor to check

@@ -1,6 +1,8 @@
 import os
 from loguru import logger
 
+# Set global safe mode variable to false default
+neuralg_SAFEMODE = False
 # Initialize global model handler
 from .utils.ModelHandler import ModelHandler
 
@@ -20,9 +22,6 @@ from .training.train_model import train_model
 
 # Set log level
 set_log_level("INFO")
-
-# Set global safe mode variable to false default
-neuralg_SAFEMODE = False
 
 
 # Set main device by default to cpu if no other choice was made before

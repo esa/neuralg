@@ -1,5 +1,6 @@
 from .utils.predict import predict
 from .. import neuralg_ModelHandler
+from .. import neuralg_SAFEMODE
 from .utils.validate_input import validate_input
 
 
@@ -15,7 +16,8 @@ def eigvals(A, symmetric=False, real=False, custom_model_name=None):
     Returns:
          tensor: Containing the real-valued eigenvalue approximations to A. If A is a n-dimensional, resulting output is n-1 dimensional with the same batch dimension.
     """
-    validate_input(A, operation="eig", symmetric=symmetric, real=real)
+    if neuralg_SAFEMODE:
+        validate_input(A, operation="eig", symmetric=symmetric, real=real)
 
     matrix_size = A.shape[-1]
     # Load the right model via model handler

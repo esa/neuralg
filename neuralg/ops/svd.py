@@ -1,4 +1,5 @@
 from .. import neuralg_ModelHandler
+from .. import neuralg_SAFEMODE
 from .utils.validate_input import validate_input
 from .utils.predict import predict
 
@@ -13,8 +14,8 @@ def svd(A, custom_model_name=None):
     Returns:
          tensor: Containing the real-valued singular value approximations to A. If A is a n-dimensional, resulting output is n-1 dimensional with the same batch dimension.
     """
-
-    validate_input(A, operation="svd")
+    if neuralg_SAFEMODE:
+        validate_input(A, operation="svd")
 
     matrix_size = A.shape[-1]
 

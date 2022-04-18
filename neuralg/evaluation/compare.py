@@ -1,6 +1,6 @@
 from .evaluate_model import evaluate_model
 from .compute_accuracy import compute_accuracy
-from ..ops.eig import eig
+from ..ops.eigvals import eigvals
 from ..ops.svd import svd
 from dotmap import DotMap
 from itertools import compress
@@ -20,7 +20,7 @@ def compare_eig_run(run_cfg, symmetric, real, tol=0.05):
         test_parameters["symmetric"] = False
     # Test performance on random matrices with uniformly distributed elements
 
-    op = lambda x: eig(x, symmetric=symmetric, real=real)
+    op = lambda x: eigvals(x, symmetric=symmetric, real=real)
 
     return _compare_with_neuralg(run_cfg, op, test_parameters, tol)
 
@@ -70,4 +70,3 @@ def _compare_model(model, op, test_parameters, tol):
         compute_accuracy(tol, evaluate_model(op, test_parameters)).item(), 3
     )
     return trained_acc, neuralg_acc
-
