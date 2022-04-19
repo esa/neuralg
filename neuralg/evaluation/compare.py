@@ -64,17 +64,13 @@ def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
     DotMap: Results containing computed accuracies and list of bools. True corresponds to improved model perfomance.
 
     """
-    ms = run_cfg.matrix_sizes
-    no_models = len(ms)
-
     results = DotMap()
     results.is_improved = []
     results.accuracy = []
 
-    for j in range(no_models):
-        d = ms[j]  # Matrix dimension
-        test_parameters["d"] = d
-        model = run_cfg[d].model
+    for size in run_cfg.matrix_sizes:
+        test_parameters["d"] = size  # Matrix dimension
+        model = run_cfg[size].model
         trained_acc, neuralg_acc = _compare_model(model, op, test_parameters, tol)
         print(trained_acc, neuralg_acc)
         results.is_improved.append(bool(trained_acc - neuralg_acc > 0))
@@ -83,7 +79,7 @@ def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
     if any(results.is_improved):
         print(
             "Performance improved for matrix sizes {} with accuracies {}, resepectively. Test parameters: {}".format(
-                list(compress(ms, results.is_improved)),
+                list(compress(run_cfg.matrix_sizes, results.is_improved)),
                 list(compress(results.accuracy, results.failed)),
                 test_parameters,
             )
