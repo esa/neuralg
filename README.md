@@ -100,7 +100,7 @@ The neuralg module is designed to resemble existing, commonly used numerical lin
 
 import torch 
 import neuralg 
-from neuralg import eig 
+from neuralg import eigvals
 # Enable GPU support if available 
 neuralg.set_up_torch(torch_enable_cuda = True)
 
@@ -110,12 +110,12 @@ batch_size, matrix_size = 10000, 5
 matrix_batch = torch.rand(batch_size,matrix_size,matrix_size)
 
 # Call neuralg to approximate eigenvalues 
-eigvals = eig(matrix_batch) # outputs are torch.complexfloat dtype
+eigvals = eigvals(matrix_batch) # outputs are torch.complexfloat dtype
 
 # Construct symmetric matrices
 symmetric_matrix_batch = torch.triu(matrix_batch, 0) + torch.transpose(torch.triu(matrix_batch, 1),1,2) 
 # Symmetric matrices have specialized appproximators
-eigvals_sym =  eig(symmetric_matrix_batch, symmetric = True) # output are torch.float dtype
+eigvals_sym =  eigvals(symmetric_matrix_batch, symmetric = True) # output are torch.float dtype
 
 ```
 
@@ -123,10 +123,10 @@ eigvals_sym =  eig(symmetric_matrix_batch, symmetric = True) # output are torch.
 Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices. Current available models have been trained and evaluated on random square matrices. For details, see specifications for corresponding operations and matrix types. 
 |     **function call**     | **supported dtypes**                                                  | **supported sizes** |                                                              **training matrix distribution**                                                              |
 |:-------------------------:|-----------------------------------------------------------------------|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `eig(x,symmetric = True)` | float32 (in / out), float64 (in / out),                               |        [3,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
-|    `eig(x,real = True)`   | float32 (in / out), float64 (in / out),                               |        [3,10]       |                              Real valued asymmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3.                             |
-|          `eig(x)`         | float32 (in), float64 (in), complexfloat64 (out), complexfloat128(out) |        [3,5]        |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |
-|          `svd(x)`         | float32 (in / out), float64 (in / out),                               |        [3,20]       |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |                                    |
+| `eig(x,symmetric = True)` | float32 (in / out), float64 (in / out),                               |        [2,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
+|    `eig(x,real = True)`   | float32 (in / out), float64 (in / out),                               |        [2,10]       |                              Real valued asymmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3.                             |
+|          `eig(x)`         | float32 (in), float64 (in), complexfloat64 (out), complexfloat128(out) |        [2,5]        |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |
+|          `svd(x)`         | float32 (in / out), float64 (in / out),                               |        [2,20]       |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |                                    |
 
 ### Customized models
 Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
