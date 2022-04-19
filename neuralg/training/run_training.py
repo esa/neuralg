@@ -6,6 +6,7 @@ from loguru import logger
 from copy import deepcopy
 from ..training.losses import eigval_L1
 from ..training.get_sample import get_sample
+from .utils.sorting import real_sort
 
 
 def _train_on_batch(batch, model, loss_fcn, optimizer):
@@ -22,7 +23,7 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
     """
     pred = model(batch.X)
 
-    if loss_fcn == eigval_L1:
+    if batch.operation == torch.linalg.eig:
         batch.compute_labels()
         sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[0]
         loss = loss_fcn(pred, sorted_eigvals)
@@ -77,6 +78,8 @@ def run_training(train_cfg):
     matrix_parameters = deepcopy(train_cfg.batch_parameters)
     if matrix_parameters["operation"] == "eig":
         matrix_parameters["operation"] = torch.linalg.eig
+    elif matrix_parameters["operation"] == "svd":
+        matrix_parameters["operation"] = torch.linalg.svdvals
 
     train_cfg, optimizer, scheduler = _init_training(train_cfg)
 
@@ -126,7 +129,7 @@ def run_training(train_cfg):
             if i % 100 == 0:
                 pred_on_eval = train_cfg.model(eval_set.X)
                 eval_set.compute_labels()
-                if loss_fcn == eigval_L1:
+                if eval_set.operation == torch.linalg.eig:
                     sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
                     eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)
                 else:

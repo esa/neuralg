@@ -20,7 +20,7 @@ interval = 10 #If Wigner matrices, the elements will be drawn uniform from [-int
 
 # Run parameters
 [run_params] #Dict of parameters needed for training
-iterations = 2000 #Iterations per epoch
+iterations = 10000 #Iterations per epoch
 epoch = 1 #Number of epochs
 lr = 3e-4 #Learning rate
 loss_fcn = "eigval_L1" #Loss function used in training
