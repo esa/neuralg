@@ -80,7 +80,7 @@ def _compare_with_neuralg(run_cfg, op, test_parameters, tol):
         results.is_improved.append(bool(trained_acc - neuralg_acc > 0))
         results.accuracy.append([trained_acc, neuralg_acc])
 
-    if True in results.is_improved:
+    if any(results.is_improved):
         print(
             "Performance improved for matrix sizes {} with accuracies {}, resepectively. Test parameters: {}".format(
                 list(compress(ms, results.is_improved)),
