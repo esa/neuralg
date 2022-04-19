@@ -12,11 +12,14 @@ on:
     - main
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        lfs: true
+    - name: Checkout LFS objects
+      run: git lfs checkout
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -24,13 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         $CONDA/bin/conda env update --file environment.yml --name base
-    - uses: actions/checkout@v2
-      with: 
-        lfs: true
     - name: Test with pytest
       run: |
         conda install pytest
         $CONDA/bin/pytest
-    - uses: actions/checkout@v2
-      with:
-        lfs: true
