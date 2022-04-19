@@ -6,15 +6,17 @@ from loguru import logger
 
 class ModelHandler:
     """Tracks and stores loaded models and provides them to the ops.
-    
+
     When a model is requested for the first time it loads it. Supports clearing the loaded models.
     """
 
     def __init__(self):
         self.loaded_models = {}
 
-    def get_model(self, op, matrix_size, custom_model_name=None):
-        """ Get the designated model for given operation and matrix size
+    def get_model(
+        self, op, matrix_size, custom_model_name=None, custom_model_class=False
+    ):
+        """Get the designated model for given operation and matrix size
 
         Args:
             op (str): The linear algebra operation the model should approximate
@@ -24,7 +26,9 @@ class ModelHandler:
             torch.nn: Requested designated model
         """
         if custom_model_name is not None:
-            return self._get_custom_model(op, matrix_size, custom_model_name)
+            return self._get_custom_model(
+                op, matrix_size, custom_model_name, custom_model_class
+            )
         else:
             requested_model_name = self._get_model_name(op, matrix_size)
         if requested_model_name in self.loaded_models:
@@ -33,7 +37,7 @@ class ModelHandler:
             return self._first_load(requested_model_name)
 
     def _first_load(self, model_name):
-        """ Loads a model for the first time
+        """Loads a model for the first time
 
         Args:
             model_name (str): Name of the requested model
@@ -59,8 +63,8 @@ class ModelHandler:
         model_name = "{}{}".format(op, matrix_size)
         return model_name
 
-    def _get_custom_model(self, op, matrix_size, model_name):
-        """ If it exists, loads a custom model via path for the given operation and matrix size.
+    def _get_custom_model(self, op, matrix_size, model_name, custom_model_class):
+        """If it exists, loads a custom model via path for the given operation and matrix size.
 
         Args:
             op (str):  The linear algebra operation the model should approximate
@@ -73,17 +77,17 @@ class ModelHandler:
         if model_name in self.loaded_models:
             return self.loaded_models[model_name]
         else:
-            loaded_model = load_custom_model(op, matrix_size, model_name)
+            loaded_model = load_custom_model(
+                op, matrix_size, model_name, custom_model_class
+            )
             # Track all loaded models
             self.loaded_models[model_name] = loaded_model
         return loaded_model
 
     def clear_loaded_models(self):
-        """ Frees allocated memory from loaded models
-        """
+        """Frees allocated memory from loaded models"""
         logger.info("Clearing loaded models")
         loaded_models_copy = deepcopy(list(self.loaded_models.keys()))
         for model in loaded_models_copy:
             del self.loaded_models[model]
         del loaded_models_copy  # Not sure if needed
-

@@ -2,7 +2,7 @@ from .. import neuralg_ModelHandler
 from .utils.validate_input import validate_input
 
 
-def svd(A, custom_model_name=None):
+def svd(A, custom_model_name=None, custom_model_class=False):
     """Approximates  singular values of a square matrix.
      Supports batches of matrices, and if A is a batch of matrices then the output has the same batch dimensions.
      Supports input of float and double dtypes.
@@ -18,7 +18,7 @@ def svd(A, custom_model_name=None):
     matrix_size = A.shape[-1]
 
     model = neuralg_ModelHandler.get_model(
-        "svd", matrix_size
+        "svd", matrix_size, custom_model_name, custom_model_class
     )  # Load the right model via model handler
     out = model(A)  # Evaluate model on input
     return out
