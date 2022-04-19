@@ -23,12 +23,18 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
     """
     pred = model(batch.X)
 
-    if batch.operation == torch.linalg.eig:
+    if batch.operation == torch.linalg.eig:  # Eigenvalues are sorted in ascending order
         batch.compute_labels()
-        if model.__class__.__name__ == "CEigNERF":
-            sorted_eigvals = real_sort(batch.Y[0])
+        if (
+            model.__class__.__name__ == "CEigNERF"
+        ):  # Model used to compute complex eigenvalues
+            sorted_eigvals = real_sort(
+                batch.Y[0]
+            )  # Complex eigenvalues are sorted by their real part
         else:
-            sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[0]
+            sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[
+                0
+            ]  # If only real-valued eigenvalues
         loss = loss_fcn(pred, sorted_eigvals)
     else:
         batch.compute_labels()
@@ -133,8 +139,12 @@ def run_training(train_cfg):
                 pred_on_eval = train_cfg.model(eval_set.X)
                 eval_set.compute_labels()
                 if eval_set.operation == torch.linalg.eig:
-                    if train_cfg.model.__class__.__name__ == "CEigNERF":
-                        sorted_eigvals = real_sort(eval_set.Y[0])
+                    if (
+                        train_cfg.model.__class__.__name__ == "CEigNERF"
+                    ):  # Model used to compute complex eigenvalues
+                        sorted_eigvals = real_sort(
+                            eval_set.Y[0]
+                        )  # Complex eigenvalues are sorted by their real part
                     else:
                         sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
                     eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)

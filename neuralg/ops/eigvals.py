@@ -10,12 +10,13 @@ def eigvals(A, symmetric=False, real=False, custom_model_name=None):
      Args:
          A (tensor): Tensor of shape [*,d,d] where * can be zero or more batch dimensions.
          symmetric (bool, optional): Specifying if matrix is symmetric, will load specialized models. Defaults to False.
-         real (bool): Specyfing if output eigenvalues should be enforced real, will load specialized trained models. Defaults to False.
+         real (bool,optional): Specyfing if output eigenvalues should be enforced real, will load specialized trained models. Defaults to False.
+         custom_model_name (str, optional): If specified and such model exists, the corresponding model will be used for inference. Defaults to None.
     Returns:
          tensor: Containing the real-valued eigenvalue approximations to A. If A is a n-dimensional, resulting output is n-1 dimensional with the same batch dimension.
     """
     validate_input(A, operation="eig", symmetric=symmetric, real=real)
-    neuralg_ModelHandler.clear_loaded_models()
+
     matrix_size = A.shape[-1]
     # Load the right model via model handler
     if symmetric:

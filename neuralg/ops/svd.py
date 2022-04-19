@@ -8,7 +8,7 @@ def svd(A, custom_model_name=None):
      Supports input of float and double dtypes.
      Args:
          A (tensor): Tensor of shape [*,d,d] where * can be zero or more batch dimensions.
-         custom_model_path (str,optional): If specified, the custom model with passed name will be used in approximation. Defaults to None
+         custom_model_name (str,optional): If specified, the custom model with passed name will be used in approximation. Defaults to None
     Returns:
          tensor: Containing the real-valued singular value approximations to A. If A is a n-dimensional, resulting output is n-1 dimensional with the same batch dimension.
     """
