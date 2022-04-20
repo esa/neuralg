@@ -3,7 +3,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/gomezz/neuralg">
-    <img src="test_neuralg_logo.png" alt="Logo"  width="240" height="120">
+    <img src="logo_white_small.png" alt="Logo"  width="200" height="200">
   </a>
   <p align="center">
     Neural network approximators of linear algebra operations on GPU with PyTorch
@@ -36,7 +36,7 @@
      <ul>
         <li><a href="#small-example">Small example</a></li>
         <li><a href="#support-and-training-distributions">Support and training distributions</a></li>
-        <li><a href="#customized-models">Cutomized models</a></li>
+        <li><a href="#available-models-">Available models</a></li>
       </ul>
     </li>
     <li><a href="#license">License </a>
@@ -123,13 +123,19 @@ eigvals_sym =  eigvals(symmetric_matrix_batch, symmetric = True) # output are to
 Built with PyTorch and targeting GPU utilization, neuralg only supports input of type `torch.Tensor`. The current version of neuralg supports real valued input matrices. Current available models have been trained and evaluated on random square matrices. For details, see specifications for corresponding operations and matrix types. 
 |     **function call**     | **supported dtypes**                                                  | **supported sizes** |                                                              **training matrix distribution**                                                              |
 |:-------------------------:|-----------------------------------------------------------------------|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `eig(x,symmetric = True)` | float32 (in / out), float64 (in / out),                               |        [2,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
-|    `eig(x,real = True)`   | float32 (in / out), float64 (in / out),                               |        [2,10]       |                              Real valued asymmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3.                             |
+| `eig(x,symmetric = True)` | float32 (in / out), float64 (in / out)                               |        [2,20]       | Real valued symmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3 and eigenvectors uniformly distributed on the unit sphere. |
+|    `eig(x,real = True)`   | float32 (in / out), float64 (in / out)                               |        [2,10]       |                              Real valued asymmetric with i.i.d. centered normally distributed eigenvalues with variance 100/3.                             |
 |          `eig(x)`         | float32 (in), float64 (in), complexfloat64 (out), complexfloat128(out) |        [2,5]        |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |
-|          `svd(x)`         | float32 (in / out), float64 (in / out),                               |        [2,20]       |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |                                    |
+|          `svd(x)`         | float32 (in / out), float64 (in / out)                               |        [2,20]       |                                             Real valued with i.i.d. uniformly distributed elements on [-10,10].                                            |                                    |
 
-### Customized models
-Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
+### Available models
+All current available models are listed below. The nerf type models are implementations of architecture from [NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis](https://arxiv.org/pdf/2003.08934.pdf)
+| **model name** | **model type** | **hyper parameters** | **Additional information** |
+|:---:|:---:|:---:|:---:|
+| [EigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) | [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] |  |
+| [CEigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |<!-- Change this link when public repo-->
+#### Customizing and adding models
+Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
     
 ## License
 
