@@ -1,6 +1,4 @@
 import torch
-
-from ...utils.set_log_level import set_log_level
 from loguru import logger
 from ...utils.constants import (
     NEURALG_MATRIX_SIZES as MATRIX_SIZES,
@@ -131,7 +129,6 @@ def _safety_check(input):
         Warning: If input elements exceed 1e16 in abolute value
     """
     max_lim = 1e16
-    set_log_level("WARNING")
     if torch.isnan(input).sum() != 0:
         raise ValueError("NaN input not supported")
     if input.abs().max() > max_lim:
