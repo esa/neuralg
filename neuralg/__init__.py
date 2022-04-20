@@ -15,8 +15,6 @@ from .utils.clear_loaded_models import clear_loaded_models
 from .utils.set_up_torch import set_up_torch
 from .io.get_model import get_model
 from .io.save_model import save_model
-from .io.delete_model import delete_model
-from .io.clear_all_custom_models import clear_all_custom_model
 from .training.train_model import train_model
 
 set_log_level("INFO")
@@ -33,9 +31,7 @@ set_precision()
 
 __all__ = [
     "eigvals",
-    "clear_all_custom_models",
     "clear_loaded_models",
-    "delete_model",
     "get_model",
     "save_model",
     "set_precision",
