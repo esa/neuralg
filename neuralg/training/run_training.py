@@ -10,7 +10,7 @@ from .utils.sorting import real_sort
 
 
 def _train_on_batch(batch, model, loss_fcn, optimizer):
-    """ Update model parameters from forward and backward pass on a batch
+    """Update model parameters from forward and backward pass on a batch
 
     Args:
         batch (RandomMatrixDataSet): Batch of matrices to backpropagate loss from
@@ -19,13 +19,22 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
         optimizer (torch.opt): Optimizer used in training
 
     Returns:
-        tensor: loss from model forward pass on batch 
+        tensor: loss from model forward pass on batch
     """
     pred = model(batch.X)
 
-    if batch.operation == torch.linalg.eig:
+    if batch.operation == torch.linalg.eig:  # Eigenvalues are sorted in ascending order
         batch.compute_labels()
-        sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[0]
+        if (
+            model.__class__.__name__ == "CEigNERF"
+        ):  # Model used to compute complex eigenvalues
+            sorted_eigvals = real_sort(
+                batch.Y[0]
+            )  # Complex eigenvalues are sorted by their real part
+        else:
+            sorted_eigvals = torch.sort(torch.real(batch.Y[0]), 2)[
+                0
+            ]  # If only real-valued eigenvalues
         loss = loss_fcn(pred, sorted_eigvals)
     else:
         batch.compute_labels()
@@ -44,7 +53,7 @@ def _train_on_batch(batch, model, loss_fcn, optimizer):
 
 
 def _init_training(train_cfg):
-    """ Initializes necessary items for a training run
+    """Initializes necessary items for a training run
 
     Args:
         train_cfg (DotMap): Configurations for training, must include a torch model
@@ -62,7 +71,7 @@ def _init_training(train_cfg):
 
 
 def run_training(train_cfg):
-    """ Does a full training run given a model an training configurations. 
+    """Does a full training run given a model an training configurations.
 
     Args:
         train_cfg (DotMap): Training run configurations, including matrix characteristics and training parameters
@@ -130,7 +139,14 @@ def run_training(train_cfg):
                 pred_on_eval = train_cfg.model(eval_set.X)
                 eval_set.compute_labels()
                 if eval_set.operation == torch.linalg.eig:
-                    sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
+                    if (
+                        train_cfg.model.__class__.__name__ == "CEigNERF"
+                    ):  # Model used to compute complex eigenvalues
+                        sorted_eigvals = real_sort(
+                            eval_set.Y[0]
+                        )  # Complex eigenvalues are sorted by their real part
+                    else:
+                        sorted_eigvals = torch.sort(torch.real(eval_set.Y[0]), 2)[0]
                     eval_loss = loss_fcn(pred_on_eval, sorted_eigvals)
                 else:
                     eval_loss = loss_fcn(pred_on_eval, eval_set.Y)
