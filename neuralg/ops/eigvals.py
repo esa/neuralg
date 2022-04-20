@@ -3,7 +3,9 @@ from .utils.validate_input import validate_input
 
 
 # Potentially, we should perhaps call this eigvals, since it only computes eigenvalues
-def eigvals(A, symmetric=False, real=False, custom_model_name=None):
+def eigvals(
+    A, symmetric=False, real=False, custom_model_name=None, custom_model_class=False
+):
     """Approximates eigenvalues of a real valued square matrix.
      Supports batches of matrices, and if A is a batch of matrices then the output has the same batch dimensions.
      Supports input of float and double dtypes.
@@ -20,14 +22,16 @@ def eigvals(A, symmetric=False, real=False, custom_model_name=None):
     matrix_size = A.shape[-1]
     # Load the right model via model handler
     if symmetric:
-        model = neuralg_ModelHandler.get_model("eigval", matrix_size, custom_model_name)
+        model = neuralg_ModelHandler.get_model(
+            "eigval", matrix_size, custom_model_name, custom_model_class
+        )
     elif real:
         model = neuralg_ModelHandler.get_model(
-            "r_eigval", matrix_size, custom_model_name
+            "r_eigval", matrix_size, custom_model_name, custom_model_class
         )
     else:
         model = neuralg_ModelHandler.get_model(
-            "c_eigval", matrix_size, custom_model_name
+            "c_eigval", matrix_size, custom_model_name, custom_model_class
         )
 
     out = model(A)  # Evaluate model on input
