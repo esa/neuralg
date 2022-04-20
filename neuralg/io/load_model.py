@@ -12,7 +12,7 @@ def load_model(model_name):
         model_name (str): Name of requested model
 
     Returns:
-        torch.nn : Requested model. Raises assertion if the model name not known. 
+        torch.nn : Requested model. Raises assertion if the model name is not known. 
     """
 
     available_models = DotMap()

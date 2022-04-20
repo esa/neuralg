@@ -59,8 +59,12 @@ def _load_test_settings(run_cfg):
         run_cfg.test_cfg.test_settings["wigner"] = deepcopy(test_parameters)
 
     test_parameters["wigner"] = False
-    for dist in run_cfg.test_cfg.distributions:
-        test_parameters["dist"] = dist
-        run_cfg.test_cfg.test_settings[str(dist)] = deepcopy(test_parameters)
+
+    if "distributions" in run_cfg.test_cfg:
+        for dist in run_cfg.test_cfg.distributions:
+            test_parameters["dist"] = dist
+            if "symmetric" in run_cfg.test_cfg:
+                test_parameters["symmetric"] = deepcopy(run_cfg.test_cfg["symmetric"])
+            run_cfg.test_cfg.test_settings[str(dist)] = deepcopy(test_parameters)
     return run_cfg
 
