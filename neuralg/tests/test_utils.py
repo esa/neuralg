@@ -10,10 +10,10 @@ def _test_op(op, supported_sizes, test_parameters, tol, error_bound):
 
     Args:
         op (function): Requested operation for testing
-        supported_sizes (list): List of supported matrix sizes 
+        supported_sizes (list): List of supported matrix sizes
         test_parameters (dict): Parameter configuration for the test
         tol (float): Error tolerance
-        error_bound (float): Ratio of matrices we require to lie within the tolerance. 0 < tol < 1. 
+        error_bound (float): Ratio of matrices we require to lie within the tolerance. 0 < tol < 1.
     """
     results = DotMap()
     # Track which models fails the error bound
@@ -42,7 +42,7 @@ def _test_op(op, supported_sizes, test_parameters, tol, error_bound):
 
 
 def _test_batch_mode(op, matrix_size):
-    """ Check operations support for different types of input e.g. in and out of batch mode with different batch dimensions
+    """Check operations support for different types of input e.g. in and out of batch mode with different batch dimensions
 
     Args:
         op (function): Requested operation
@@ -66,13 +66,3 @@ def _test_batch_mode(op, matrix_size):
     assert out3 is not None
     assert out3.__class__.__name__ == "Tensor"
     assert out3.shape == torch.Size([2, 3, 4, matrix_size])
-
-    # Should also handle invalid input by throwing value errors
-    try:
-        out = op(torch.rand(3, 4))
-    except ValueError:
-        None
-    try:
-        out = op(torch.rand(3))
-    except ValueError:
-        None

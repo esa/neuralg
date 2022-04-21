@@ -1,6 +1,8 @@
 import os
 from loguru import logger
 
+# Set global safe mode variable to false default
+neuralg_SAFEMODE = False
 # Initialize global model handler
 from .utils.ModelHandler import ModelHandler
 
@@ -13,11 +15,14 @@ from .utils.set_log_level import set_log_level
 from .utils.set_precision import set_precision
 from .utils.clear_loaded_models import clear_loaded_models
 from .utils.set_up_torch import set_up_torch
+from .utils.set_safe_mode import set_safe_mode
 from .io.get_model import get_model
 from .io.save_model import save_model
 from .training.train_model import train_model
 
+# Set log level
 set_log_level("INFO")
+
 
 # Set main device by default to cpu if no other choice was made before
 if "TORCH_DEVICE" not in os.environ:
@@ -37,6 +42,7 @@ __all__ = [
     "set_precision",
     "set_log_level",
     "set_up_torch",
+    "set_safe_mode",
     "svd",
     "train_model",
 ]

@@ -6,7 +6,7 @@ from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_eigvals():
-    """ Tests if the eig operation works for all supported sizes and is within defined errors bounds, 
+    """Tests if the eig operation works for all supported sizes and is within defined errors bounds,
     for symmetric, non-symmetric with real eigenvalues and non-symmetric with complex eigenvalues
     """
     _test_eig(symmetric=True)
@@ -14,8 +14,8 @@ def test_eigvals():
 
 
 def _test_eig(symmetric=False, real=False):
-    """Tests if the eig operation works for all supported sizes for the passed matrix type.  symmetric and non-symmetric and is within defined errors bounds. 
-    The test set is sampled with a fixed seed. 
+    """Tests if the eig operation works for all supported sizes for the passed matrix type.  symmetric and non-symmetric and is within defined errors bounds.
+    The test set is sampled with a fixed seed.
     """
 
     # Potentially, one might want to expand the error bounds to include more diverse and out-of training examples,
@@ -26,7 +26,8 @@ def _test_eig(symmetric=False, real=False):
         error_bound = 0.9  # Ratio of matrices we require to lie within the tolerance
         tol = 0.2  # Preliminary tolerace
         supported_sizes = np.arange(
-            MATRIX_SIZES.eig.sym.lower_bound, MATRIX_SIZES.eig.sym.upper_bound + 1,
+            MATRIX_SIZES.eig.sym.lower_bound,
+            MATRIX_SIZES.eig.sym.upper_bound + 1,
         )
         test_parameters[
             "wigner"

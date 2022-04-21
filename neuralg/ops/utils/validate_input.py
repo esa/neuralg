@@ -1,4 +1,5 @@
 import torch
+from loguru import logger
 from ...utils.constants import (
     NEURALG_MATRIX_SIZES as MATRIX_SIZES,
     NEURALG_SUPPORTED_OPERATIONS,
@@ -6,16 +7,16 @@ from ...utils.constants import (
 
 
 def validate_input(input, operation, symmetric=False, real=False):
-    """ Checks that the input is valid for the requested operation
+    """Checks that the input is valid for the requested operation
 
     Args:
-        input (tensor): Input to be validated 
-        operation (str): Operation requested for the input, e.g. eig or svd. 
+        input (tensor): Input to be validated
+        operation (str): Operation requested for the input, e.g. eig or svd.
         symmetric (bool, optional): Only applies to eig operation. Defaults to None.
         real (bool, optional): Only applies to eig operation. Defaults to None.
 
     Raises:
-        ValueError: If the operation is not supported for the passed input shape and type 
+        ValueError: If the operation is not supported for the passed input shape and type
     """
 
     _general_validation(input)
@@ -31,9 +32,11 @@ def validate_input(input, operation, symmetric=False, real=False):
             )
         )
 
+    _safety_check(input)
+
 
 def _validate_eig_input(input, symmetric, real):
-    """ Checks that the eig operation is supported for the passed matrix size.
+    """Checks that the eig operation is supported for the passed matrix size.
     Args:
         input (tensor): Batch to be validated for eigenvalue approximation
         symmetric (bool): Specifying if matrix is symmetric.
@@ -85,13 +88,15 @@ def _validate_support(input, min_size, max_size):
     """
     if input.shape[-1] < min_size or input.shape[-1] > max_size:
         raise ValueError(
-            "Matrix dimension for requested operation must be between {} and {}, but had dimension"
-            + str(input.shape[-1]).format(min_size, max_size)
+            "Matrix dimension for requested operation must be between {} and {}, but had dimension: ".format(
+                min_size, max_size
+            )
+            + str(input.shape[-1])
         )
 
 
 def _general_validation(input):
-    """ Checks that the input has correct shape.
+    """Checks that the input has correct shape.
     Args:
         input (tensor): Batch to be validated
 
@@ -109,3 +114,24 @@ def _general_validation(input):
         )
     if input.shape[-2] != input.shape[-1]:
         raise ValueError("Matrices must be quadratic but had shape" + str(input.shape))
+
+
+def _safety_check(input):
+    """Run safety check on model inputs.
+
+    Args:
+        input (tensor): Input tensor to check
+
+    Raises:
+        ValueError: If NaN input
+
+    Yields:
+        Warning: If input elements exceed 1e16 in abolute value
+    """
+    max_lim = 1e16
+    if torch.isnan(input).sum() != 0:
+        raise ValueError("NaN input not supported")
+    if input.abs().max() > max_lim:
+        logger.warning(
+            f"Input elements exceed {max_lim} in absolute value. Might yield unexpected output"
+        )
