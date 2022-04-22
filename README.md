@@ -2,13 +2,13 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/gomezz/neuralg">
+  <a href="https://github.com/esa/neuralg">
     <img src="logos/logo_white_small.png" alt="Logo"  width="200" height="200">
   </a>
   <p align="center">
     Neural network approximators of linear algebra operations on GPU with PyTorch
     <br />
-    <a href="https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a> <!-- Update for final version -->
+    <a href="https://github.com/esa/neuralg/blob/main/notebooks/example_problem.ipynb">View Example notebook</a>
   </p>
 </p>
 
@@ -84,17 +84,17 @@ Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Doub
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
 
 ### Test 
-After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- Double-check in final version -->
+After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: 
 
 ```sh
 pytest
 ```
 
-<!-- USAGE EXAMPLES -->
+<!-- USAGE INFO-->
 ## Usage
 
 ### Small example
-The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
+The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/esa/neuralg/blob/main/notebooks/example_problem.ipynb). 
 
 ```python
 
@@ -132,11 +132,11 @@ Built with PyTorch and targeting GPU utilization, neuralg only supports input of
 All current available models are listed below. The nerf type models are implementations of architecture from [NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis](https://arxiv.org/pdf/2003.08934.pdf)
 | **model name** | **model type** | **hyper parameters** | **Additional information** |
 |:---:|:---:|:---:|:---:|
-| [EigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) | [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] |  |
-| [CEigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |<!-- Change this link when public repo-->
+| [EigNERF](https://github.com/esa/neuralg/blob/minimal_working_module/neuralg/models/nerf.py) | [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] |  |
+| [CEigNERF](https://github.com/esa/neuralg/blob/minimal_working_module/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |
 #### Customizing and adding models
-Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
+Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/esa/neuralg/blob/main/notebooks/training_tutorial.ipynb) for a thorough how-to guide.
     
 ## License
 
-Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/gomezzz/neuralg/LICENSE) <!-- Change this link -->for more information.
+Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/esa/neuralg/blob/main/LICENSE) for more information.
