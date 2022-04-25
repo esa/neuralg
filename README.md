@@ -2,13 +2,13 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/gomezz/neuralg">
+  <a href="https://github.com/esa/neuralg">
     <img src="logos/logo_white_small.png" alt="Logo"  width="200" height="200">
   </a>
   <p align="center">
     Neural network approximators of linear algebra operations on GPU with PyTorch
     <br />
-    <a href="https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb">View Example notebook</a> <!-- Update for final version -->
+    <a href="https://github.com/esa/neuralg/blob/main/notebooks/example_problem.ipynb">View Example notebook</a>
   </p>
 </p>
 
@@ -73,18 +73,18 @@ To install neuralg via pip, run
    pip install neuralg
    ```
 
-Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Double check for final version-->
+Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Double check for release-->
 
 **GPU Utilization**
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
 
 
 
-<!-- USAGE EXAMPLES -->
+<!-- USAGE INFO-->
 ## Usage
 
 ### Small example
-The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/gomezzz/neuralg/notebooks/example_problem.ipynb). <!-- Change this link when public repo-->
+The neuralg module is designed to resemble existing, commonly used numerical linear algebra libraries. Below is a small example showing how neuralg can be used to approximate the eigenvalues of a batch of random matrices. For a more elaborate and interactive example, please refer to the jupyter notebook [example problem](https://github.com/esa/neuralg/blob/main/notebooks/example_problem.ipynb). 
 
 ```python
 
@@ -122,10 +122,18 @@ Built with PyTorch and targeting GPU utilization, neuralg only supports input of
 All current available models are listed below. The nerf type models are implementations of architecture from [NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis](https://arxiv.org/pdf/2003.08934.pdf)
 | **model name** | **model type** | **hyper parameters** | **Additional information** |
 |:---:|:---:|:---:|:---:|
-| [EigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) | [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] |  |
-| [CEigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |<!-- Change this link when public repo-->
+| [EigNERF](https://github.com/esa/neuralg/blob/minimal_working_module/neuralg/models/nerf.py) | [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] |  |
+| [CEigNERF](https://github.com/esa/neuralg/blob/minimal_working_module/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |
 #### Customizing and adding models
-Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
+Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide.
+
+<!-- GOALS -->
+## Goals
+
+* **Proof of concept**: Recent years of rapid advances in machine learning aside, neural network models are yet to reach competitive results in the field of numerical linear algebra. Some attention has been paid to the subject, e.g. with [parameter rich transformers](https://arxiv.org/pdf/2112.01898.pdf). neuralg serves as a demonstration of a competitive small-scale approach, with the goal of mitigating issues with memory and time complexity related to larger models.
+* **Supporting science**: Linear algebra problems serve as fundamental computational components in countless science and engineering applications. Eigenvalue and singular value decompositions, solving linear system of equations and matrix inversion appear as essential parts of solutions in  optimization, dynamical systems, signal processing etc. Ultimately, neuralg aims to provide useful tools to researchers within these fields, with a focus on parallell computation.
+* **Addressing efficient vectorization**: The nature of classical numerical algorithms for linear algebra operations are often iterative and difficult to vectorize efficiently on GPUs and specialized machine learning hardware. Existing built-in libraries often synchronize with CPU, which can severly slow down computation. To this end, neuralg aims to allow users to exploit the computational benefits from GPU parallelization on targeted hardware.
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -162,13 +170,8 @@ Now you are all set to contribute. PRs should be created from and into the `deve
 and we will have a look at your contribution as soon as we can. 
 
 Furthermore, please make sure that your PR passes all automated tests, after which the contribution will be revire. Only PRs created on the `develop` branch with all tests passing will be considered.
-<!-- GOALS -->
-## Goals
 
-* **Proof of concept**: Recent years of rapid advances in machine learning aside, neural network models are yet to reach competitive results in the field of numerical linear algebra. Some attention has been paid to the subject, e.g. with [parameter rich transformers](https://arxiv.org/pdf/2112.01898.pdf). neuralg serves as a demonstration of a competitive small-scale approach, with the goal of mitigating issues with memory and time complexity related to larger models.
-* **Supporting science**: Linear algebra problems serve as fundamental computational components in countless science and engineering applications. Eigenvalue and singular value decompositions, solving linear system of equations and matrix inversion appear as essential parts of solutions in  optimization, dynamical systems, signal processing etc. Ultimately, neuralg aims to provide useful tools to researchers within these fields, with a focus on parallell computation.
-* **Addressing efficient vectorization**: The nature of classical numerical algorithms for linear algebra operations are often iterative and difficult to vectorize efficiently on GPUs and specialized machine learning hardware. Existing built-in libraries often synchronize with CPU, which can severly slow down computation. To this end, neuralg aims to allow users to exploit the computational benefits from GPU parallelization on targeted hardware.
 
 ## License
 
-Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/gomezzz/neuralg/LICENSE) <!-- Change this link -->for more information.
+Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/esa/neuralg/blob/main/LICENSE) for more information.
