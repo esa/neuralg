@@ -23,13 +23,11 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li><a href="#goals">Goals</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#test">Test</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a>
@@ -39,6 +37,8 @@
         <li><a href="#available-models-">Available models</a></li>
       </ul>
     </li>
+    <li><a href="#goals">Goals</a></li>
+    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License </a>
     </li>
   <ol>
@@ -58,12 +58,7 @@ This project is built with the following packages:
 
 * [PyTorch](https://pytorch.org/), implying full differentiability and can be used for machine learning
 
-<!-- GOALS -->
-## Goals
 
-* **Proof of concept**: Recent years of rapid advances in machine learning aside, neural network models are yet to reach competitive results in the field of numerical linear algebra. Some attention has been paid to the subject, e.g. with [parameter rich transformers](https://arxiv.org/pdf/2112.01898.pdf). neuralg serves as a demonstration of a competitive small-scale approach, with the goal of mitigating issues with memory and time complexity related to larger models.
-* **Supporting science**: Linear algebra problems serve as fundamental computational components in countless science and engineering applications. Eigenvalue and singular value decompositions, solving linear system of equations and matrix inversion appear as essential parts of solutions in  optimization, dynamical systems, signal processing etc. Ultimately, neuralg aims to provide useful tools to researchers within these fields, with a focus on parallell computation.
-* **Addressing efficient vectorization**: The nature of classical numerical algorithms for linear algebra operations are often iterative and difficult to vectorize efficiently on GPUs and specialized machine learning hardware. Existing built-in libraries often synchronize with CPU, which can severly slow down computation. To this end, neuralg aims to allow users to exploit the computational benefits from GPU parallelization on targeted hardware.
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -83,12 +78,7 @@ Note that *pip* will **not** set up PyTorch with CUDA and GPU support. <!-- Doub
 **GPU Utilization**
 To set up the GPU version of PyTorch, please refer to installation procedures at [PyTorch Documentation](https://pytorch.org/get-started/locally/)
 
-### Test 
-After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- Double-check in final version -->
 
-```sh
-pytest
-```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -136,7 +126,49 @@ All current available models are listed below. The nerf type models are implemen
 | [CEigNERF](https://github.com/gomezzz/neuralg/blob/main/neuralg/models/nerf.py) |  complex nerf, based on [nerf](https://github.com/darioizzo/geodesyNets/blob/master/gravann/networks/_nerf.py) | 8 hidden layers, 200 neurons, skips at layers [2,4,6] | Outputs are complex valued |<!-- Change this link when public repo-->
 #### Customizing and adding models
 Additionally, neuralg supports training models from scratch or re-training and fine tuning existing models, depending on specific user applications. It is also possible to introduce new model architectures to expand the module. Please refer to the [tutorial](https://github.com/gomezzz/neuralg/notebooks/training_tutorial.ipynb) for a thorough how-to guide. <!-- Change this link when public repo-->
-    
+<!-- CONTRIBUTING -->
+## Contributing
+
+The project is open to community contributions. Feel free to open an [issue](https://github.com/esa/neuralg/issues) or write us an email if you would like to discuss a problem or idea first.
+
+If you want to contribute, please proceed according to:
+
+1. Fork the project on [GitHub](https://github.com/esa/neuralg). 
+2. Get the most up-to-date code by installing neuralg from source:
+     1. Get [miniconda](https://docs.conda.io/en/latest/miniconda.html) or similar
+     2. Clone the repo
+      ```sh
+      git clone https://github.com/esa/neuralg.git
+      ```
+     3. Setup the environment. This will create a conda environment called `neuralg`
+      ```sh
+      conda env create -f environment.yml
+      conda activate neuralg
+      ```
+
+After cloning the repository, developers can check the functionality of `neuralg` by running the following command in the root directory: <!-- Double-check in final version -->
+
+```sh
+pytest
+```
+
+Now you are all set to contribute. PRs should be created from and into the `develop` branch. For each release the develop branch is merged into main.
+
+3. Create your Feature Branch (`git checkout -b feature/NewFeature`)
+4. Commit your Changes (`git commit -m 'Add some NewFeature'`)
+5. Push to the Branch (`git push origin feature/NewFeature`)
+6. Open a Pull Request on the `develop` branch, *not* `main` 
+
+and we will have a look at your contribution as soon as we can. 
+
+Furthermore, please make sure that your PR passes all automated tests, after which the contribution will be revire. Only PRs created on the `develop` branch with all tests passing will be considered.
+<!-- GOALS -->
+## Goals
+
+* **Proof of concept**: Recent years of rapid advances in machine learning aside, neural network models are yet to reach competitive results in the field of numerical linear algebra. Some attention has been paid to the subject, e.g. with [parameter rich transformers](https://arxiv.org/pdf/2112.01898.pdf). neuralg serves as a demonstration of a competitive small-scale approach, with the goal of mitigating issues with memory and time complexity related to larger models.
+* **Supporting science**: Linear algebra problems serve as fundamental computational components in countless science and engineering applications. Eigenvalue and singular value decompositions, solving linear system of equations and matrix inversion appear as essential parts of solutions in  optimization, dynamical systems, signal processing etc. Ultimately, neuralg aims to provide useful tools to researchers within these fields, with a focus on parallell computation.
+* **Addressing efficient vectorization**: The nature of classical numerical algorithms for linear algebra operations are often iterative and difficult to vectorize efficiently on GPUs and specialized machine learning hardware. Existing built-in libraries often synchronize with CPU, which can severly slow down computation. To this end, neuralg aims to allow users to exploit the computational benefits from GPU parallelization on targeted hardware.
+
 ## License
 
 Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/gomezzz/neuralg/LICENSE) <!-- Change this link -->for more information.
