@@ -2,13 +2,13 @@ from copy import deepcopy
 from neuralg.training.run_training import run_training
 from loguru import logger
 from dotmap import DotMap
-from neuralg.models.nerf import EigNERF
+from neuralg.models.nerf import EigNERF, CEigNERF
 from neuralg.training.save_run import save_run
 from neuralg.utils.set_log_level import set_log_level
 
 
 def train_models(cfg, save_training_run=False):
-    """ Train models with settings in passed configurations
+    """Train models with settings in passed configurations
 
     Args:
         cfg (DotMap): Training configurations for run
@@ -27,7 +27,14 @@ def train_models(cfg, save_training_run=False):
         if temp_config.model_type == "nerf":
             model = EigNERF(
                 d,
-                d ** 2,
+                d**2,
+                n_neurons=temp_config.n_neurons,
+                hidden_layers=temp_config.hidden_layers,
+            )
+        elif temp_config.model_type == "complex_nerf":
+            model = CEigNERF(
+                d,
+                d**2,
                 n_neurons=temp_config.n_neurons,
                 hidden_layers=temp_config.hidden_layers,
             )

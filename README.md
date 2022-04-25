@@ -175,3 +175,4 @@ Furthermore, please make sure that your PR passes all automated tests, after whi
 ## License
 
 Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/esa/neuralg/blob/main/LICENSE) for more information.
+

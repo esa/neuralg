@@ -1,8 +1,9 @@
 import numpy as np
 import torch
 
-from neuralg.utils.ModelHandler import ModelHandler
-from neuralg.utils.constants import NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE
+from ..utils.ModelHandler import ModelHandler
+
+from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_ModelHandler():
@@ -15,11 +16,25 @@ def test_ModelHandler():
     # Check no models are loaded when a new handler is initialized
     assert not bool(TestModelHandler.loaded_models)
 
+    # Define all supported model names and matrix size bounds
+    ops = {
+        "eigval": np.arange(
+            MATRIX_SIZES.eig.sym.lower_bound, MATRIX_SIZES.eig.sym.upper_bound + 1
+        ),
+        "r_eigval": np.arange(
+            MATRIX_SIZES.eig.real.lower_bound, MATRIX_SIZES.real.sym.upper_bound + 1
+        ),
+        "c_eigval": np.arange(
+            MATRIX_SIZES.eig.complex.lower_bound,
+            MATRIX_SIZES.eig.complex.upper_bound + 1,
+        ),
+        "svd": np.arange(
+            MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound + 1
+        ),
+    }
     # Request model for all supported operations
-    supported_sizes = np.arange(NEURALG_MIN_MATRIX_SIZE, NEURALG_MAX_MATRIX_SIZE + 1)
-    ops = ["eigval"]
     loaded_model_count = 0
-    for op in ops:
+    for op, supported_sizes in ops.items():
         for matrix_size in supported_sizes:
             # Request a model
             m = TestModelHandler.get_model(op, matrix_size)
