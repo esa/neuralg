@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="neuralg",
-    version="0.0.1",
+    version="0.0.5",
     description="Package providing torch-based neural network approximators of linear algebra operations.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -32,7 +32,7 @@ setup(
     ],
     packages=find_packages(include=["neuralg", "neuralg.*"]),
     package_data={
-        "neuralg": ["models/saved_models/*.pt"],
+        "neuralg": ["models/saved_models/*.pt", "models/saved_models/svd/*.pt"]
     },
     python_requires=">=3.8, <4",
     project_urls={"Source": "https://github.com/esa/neuralg/"},
