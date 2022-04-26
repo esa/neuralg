@@ -11,6 +11,7 @@ def test_eigvals():
     """
     _test_eig(symmetric=True)
     _test_eig(real=True)
+    _test_eig()
 
 
 def _test_eig(symmetric=False, real=False):
@@ -24,7 +25,7 @@ def _test_eig(symmetric=False, real=False):
     # These are set pretty high right now
     if symmetric:
         error_bound = 0.9  # Ratio of matrices we require to lie within the tolerance
-        tol = 0.2  # Preliminary tolerace
+        tol = 0.17  # Preliminary tolerace
         supported_sizes = np.arange(
             MATRIX_SIZES.eig.sym.lower_bound,
             MATRIX_SIZES.eig.sym.upper_bound + 1,
@@ -45,10 +46,11 @@ def _test_eig(symmetric=False, real=False):
         test_parameters["symmetric"] = False
     else:
         # Mock limits, very very high
-        error_bound = 0.75
-        tol = 0.3  # Preliminary tolerance
+        error_bound = 0.8
+        tol = 0.2  # Preliminary tolerance
         supported_sizes = np.arange(
-            MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound + 1
+            MATRIX_SIZES.eig.complex.lower_bound,
+            MATRIX_SIZES.eig.complex.upper_bound + 1,
         )  # Test performance on random matrices with uniformly distributed elements
 
     op = lambda x: eigvals(x, symmetric=symmetric, real=real)
