@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/esa/neuralg",
     author="ESA Advanced Concepts Team",
-    author_email="toveag@kth.se",  #  Should this be me or someone else?
+    author_email="toveag@kth.se",
     install_requires=[
         "matplotlib>=3.3.3",
         "torch==1.9.0",
