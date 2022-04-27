@@ -1,9 +1,9 @@
 import torch
-from neuralg.training.RandomMatrixDataSet import RandomMatrixDataSet
+from .RandomMatrixDataSet import RandomMatrixDataSet
 
 
 def get_sample(matrix_parameters):
-    """ Sample a batch of random matrices from passed configuration
+    """Sample a batch of random matrices from passed configuration
 
     Args:
         matrix_parameters (dict): Parameters characterizing the batch of generated matrices

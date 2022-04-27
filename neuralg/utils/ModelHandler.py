@@ -1,6 +1,6 @@
 from copy import deepcopy
-from neuralg.io.load_model import load_model
-from neuralg.io.load_custom_model import load_custom_model
+from ..io.load_model import load_model
+from ..io.load_custom_model import load_custom_model
 from loguru import logger
 
 
@@ -22,6 +22,8 @@ class ModelHandler:
             op (str): The linear algebra operation the model should approximate
             matrix_size (int): Size of the matrices the model should approximate operation on
             custom_model_path (str,optional): If specified, the custom model with passed name will be used in approximation. Defaults to None
+            custom_model_class (bool,optional): Specifies if custom model belongs to a custom class, will affect loading procedure. Defaults to False.
+
         Returns:
             torch.nn: Requested designated model
         """
@@ -90,4 +92,4 @@ class ModelHandler:
         loaded_models_copy = deepcopy(list(self.loaded_models.keys()))
         for model in loaded_models_copy:
             del self.loaded_models[model]
-        del loaded_models_copy  # Not sure if needed
+        del loaded_models_copy

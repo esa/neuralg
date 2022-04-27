@@ -3,6 +3,10 @@ import math
 
 
 class RandomMatrix:
+    """N sized batch of random dxd-sized matrices with eigenvalues from a passedprobability distribution.
+    Supports generating symmetric matrices.
+    """
+
     def __init__(
         self, N, d, sigma=10 / math.sqrt(3), dist="gaussian", is_symmetric=True
     ):
@@ -15,6 +19,12 @@ class RandomMatrix:
         self.from_distribution(dist=self.dist, is_symmetric=self.is_symmetric)
 
     def from_distribution(self, dist="gaussian", is_symmetric=True):
+        """
+
+        Args:
+            dist (str, optional): Distribution of eigenvalue.  Defaults to "gaussian".
+            is_symmetric (bool, optional): If true, sampled matrices will be symmetric. Defaults to True.
+        """
         # Sample new eigenvalues
         if self.dist == "gaussian":
             x = self.sigma * torch.randn(self.N, self.d, 1)
@@ -40,4 +50,3 @@ class RandomMatrix:
             self.X = torch.matmul(torch.matmul(P, diag), torch.transpose(P, 2, 3))
         else:
             self.X = torch.matmul(torch.matmul(M, diag), torch.linalg.inv(M))
-

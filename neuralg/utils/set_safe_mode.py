@@ -1,5 +1,5 @@
 from loguru import logger
-import neuralg
+from .. import neuralg_SAFEMODE
 
 
 def set_safe_mode(safe_mode=False):
@@ -11,12 +11,11 @@ def set_safe_mode(safe_mode=False):
     """
     assert type(safe_mode) is bool, "Input must be bool"
 
-    if safe_mode == neuralg.neuralg_SAFEMODE:
+    if safe_mode == neuralg_SAFEMODE:
         logger.info(f"Safe mode already set to {safe_mode}")
     else:
-        neuralg.neuralg_SAFEMODE = safe_mode
+        neuralg_SAFEMODE = safe_mode
         if safe_mode:
             logger.info("Activating safe mode. Input and outputs will be monitored")
         elif not safe_mode:
             logger.info("De-activating safe mode")
-
