@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="neuralg",
-    version="0.0.5",
+    version="0.0.6",  # TestPyPi index
     description="Package providing torch-based neural network approximators of linear algebra operations.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -21,6 +21,7 @@ setup(
         "loguru>=0.5.3",
         "dotmap>=1.3.24",
         "toml>=0.10.2",
+        "requests >= 2.27.0",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -31,9 +32,6 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     packages=find_packages(include=["neuralg", "neuralg.*"]),
-    package_data={
-        "neuralg": ["models/saved_models/*.pt", "models/saved_models/svd/*.pt"]
-    },
     python_requires=">=3.8, <4",
     project_urls={"Source": "https://github.com/esa/neuralg/"},
 )
