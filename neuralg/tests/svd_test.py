@@ -6,8 +6,8 @@ from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_svd():
-    """Tests if the svd operation works for all supported sizes and is within defined errors bounds. 
-    The test set is sampled with a fixed seed. 
+    """Tests if the svd operation works for all supported sizes and is within defined errors bounds.
+    The test set is sampled with a fixed seed.
     """
 
     test_parameters = {
