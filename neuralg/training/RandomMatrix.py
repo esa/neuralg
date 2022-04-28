@@ -22,7 +22,7 @@ class RandomMatrix:
         """
 
         Args:
-            dist (str, optional): Distribution of eigenvalue.  Defaults to "gaussian".
+            dist (str, optional): Distribution of eigenvalues.  Defaults to "gaussian".
             is_symmetric (bool, optional): If true, sampled matrices will be symmetric. Defaults to True.
         """
         # Sample new eigenvalues
