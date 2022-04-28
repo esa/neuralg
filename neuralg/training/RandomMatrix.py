@@ -3,7 +3,7 @@ import math
 
 
 class RandomMatrix:
-    """N sized batch of random dxd-sized matrices with eigenvalues from a passedprobability distribution.
+    """N-sized batch of random dxd-sized matrices with eigenvalues from a passed probability distribution.
     Supports generating symmetric matrices.
     """
 
