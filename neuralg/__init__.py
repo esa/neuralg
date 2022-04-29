@@ -1,19 +1,19 @@
 import os
 from loguru import logger
 
-__version__ = "0.0.10"  # TestPyPi index at the moment
+__version__ = "0.0.11"  # TestPyPi index at the moment
 
 from .utils.set_log_level import set_log_level
 
 # Set default log level
 set_log_level("WARNING")
 
-from .io.download_models import download_models
+from .io.download_models import _download_models
 
 # Check if directory of models exists
 if not os.path.isdir(os.path.dirname(__file__) + "/models/saved_models"):
     # If not, they are dowonloaded from the latest release
-    download_models()
+    _download_models()
 
 
 # Set global safe mode variable to false default

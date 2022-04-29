@@ -6,7 +6,7 @@ import io
 import os
 
 
-def download_models():
+def _download_models():
     """Downloads and unzips the folder of model state dicts attached to the latest GitHub release.
     Will save the folder as saved_models in the models subdirectory.
     """
