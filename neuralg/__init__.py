@@ -1,12 +1,12 @@
 import os
 from loguru import logger
 
-__version__ = "0.0.9"  # TestPyPi index at the moment
+__version__ = "0.0.10"  # TestPyPi index at the moment
 
 from .utils.set_log_level import set_log_level
 
-# Set log level
-set_log_level("INFO")
+# Set default log level
+set_log_level("WARNING")
 
 from .io.download_models import download_models
 
