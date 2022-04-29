@@ -1,12 +1,12 @@
 import os
 from loguru import logger
 
-__version__ = "0.0.10"  # TestPyPi index at the moment
+__version__ = "0.0.11"  # TestPyPi index at the moment
 
 from .utils.set_log_level import set_log_level
 
 # Set default log level
-set_log_level("WARNING")
+set_log_level("INFO")
 
 from .io.download_models import download_models
 
@@ -16,8 +16,11 @@ if not os.path.isdir(os.path.dirname(__file__) + "/models/saved_models"):
     download_models()
 
 
-# Set global safe mode variable to false default
-neuralg_SAFEMODE = False
+# Initalize global safe mode variable to false default
+from .utils.safe_mode import SafeMode
+
+neuralg_SafeMode = SafeMode()
+neuralg_SafeMode.set_mode(False)
 
 # Initialize global model handler
 from .utils.ModelHandler import ModelHandler

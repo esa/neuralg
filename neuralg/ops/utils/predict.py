@@ -1,4 +1,4 @@
-from ... import neuralg_SAFEMODE
+from ... import neuralg_SafeMode
 import torch
 from loguru import logger
 
@@ -14,7 +14,7 @@ def predict(model, input):
         tensor : Model output given passed input
     """
     out = model(input)
-    if neuralg_SAFEMODE:
+    if neuralg_SafeMode.mode:
         _check_output(out)
     return out
 

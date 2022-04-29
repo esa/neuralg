@@ -1,7 +1,8 @@
 from .. import neuralg_ModelHandler
-from .. import neuralg_SAFEMODE
+from .. import neuralg_SafeMode
 from .utils.validate_input import validate_input
 from .utils.predict import predict
+from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def svd(A, custom_model_name=None, custom_model_class=False):
@@ -15,13 +16,20 @@ def svd(A, custom_model_name=None, custom_model_class=False):
     Returns:
          tensor: Containing the real-valued singular value approximations to A. If A is a n-dimensional, resulting output is n-1 dimensional with the same batch dimension.
     """
-    if neuralg_SAFEMODE:
+    if neuralg_SafeMode.mode:
         validate_input(A, operation="svd")
 
     matrix_size = A.shape[-1]
-
-    model = neuralg_ModelHandler.get_model(
-        "svd", matrix_size, custom_model_name, custom_model_class
-    )  # Load the right model via model handler
+    try:
+        model = neuralg_ModelHandler.get_model(
+            "svd", matrix_size, custom_model_name, custom_model_class
+        )  # Load the right model via model handler
+    except ValueError:
+        raise NotImplementedError(
+            "Matrix dimension for svd operation must be between {} and {}, but had dimension: ".format(
+                MATRIX_SIZES.svd.lower_bound, MATRIX_SIZES.svd.upper_bound
+            )
+            + str(A.shape[-1])
+        )
     out = predict(model, A)  # Evaluate model on input
     return out
