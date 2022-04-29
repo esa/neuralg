@@ -1,10 +1,9 @@
 from copy import deepcopy
-from neuralg.training.run_training import run_training
 from loguru import logger
 from dotmap import DotMap
-from neuralg.models.nerf import EigNERF, CEigNERF
-from neuralg.training.save_run import save_run
-from neuralg.utils.set_log_level import set_log_level
+from .run_training import run_training
+from ..models.nerf import EigNERF, CEigNERF
+from .save_run import save_run
 
 
 def train_models(cfg, save_training_run=False):
@@ -16,7 +15,6 @@ def train_models(cfg, save_training_run=False):
     Returns:
         DotMap: Post-training configurations with added trained models and loss results
     """
-    set_log_level("TRACE")
 
     # For now, loop over requested fixed matrix sizes
     run_results = DotMap()

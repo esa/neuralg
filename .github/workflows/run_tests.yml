@@ -10,22 +10,42 @@ on:
   pull_request:
     branches:
     - main
+
 jobs:
-  build:
+  lint_flake8:
+
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        lfs: true
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Search for severe code errors with flake8
+      run: |
+        pip install flake8 
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
     - name: Install dependencies
       run: |
         $CONDA/bin/conda env update --file environment.yml --name base
     - name: Test with pytest
       run: |
         conda install pytest
-        $CONDA/bin/pytest
+        $CONDA/bin/pip install pytest-error-for-skips
+        $CONDA/bin/pytest -ra --error-for-skips

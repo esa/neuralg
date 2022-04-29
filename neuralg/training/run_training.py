@@ -4,8 +4,8 @@ import numpy as np
 from collections import deque
 from loguru import logger
 from copy import deepcopy
-from ..training.losses import eigval_L1
-from ..training.get_sample import get_sample
+from .losses import eigval_L1
+from .get_sample import get_sample
 from .utils.sorting import real_sort
 
 
