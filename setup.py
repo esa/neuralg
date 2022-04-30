@@ -36,7 +36,7 @@ setup(
     author_email="toveag@kth.se",
     install_requires=[
         "matplotlib>=3.3.3",
-        "torch==1.9.0",
+        "torch>=1.9.0",
         "loguru>=0.5.3",
         "dotmap>=1.3.24",
         "toml>=0.10.2",
