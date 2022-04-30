@@ -3,7 +3,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/esa/neuralg">
-    <img src="logos/logo_white_small.png" alt="Logo"  width="200" height="200">
+    <img src="https://github.com/esa/neuralg/releases/latest/download/logo_white_small.png" alt="Logo"  width="200" height="200">
   </a>
   <p align="center">
     Neural network approximators of linear algebra operations on GPU with PyTorch
