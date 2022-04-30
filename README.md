@@ -1,4 +1,18 @@
 # neuralg
+<!--
+*** Based on https://github.com/othneildrew/Best-README-Template
+-->
+
+<!-- BADGES -->
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/esa/neuralg/Running%20tests/main?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/esa/neuralg?style=flat-square) 
+![GitHub](https://img.shields.io/github/license/esa/neuralg?style=flat-square) ![PyPI](https://img.shields.io/pypi/v/neuralg?style=flat-square) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/neuralg?style=flat-square) 
+
+![GitHub contributors](https://img.shields.io/github/contributors/esa/neuralg?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/esa/neuralg?style=flat-square) ![GitHub pull requests](https://img.shields.io/github/issues-pr/esa/neuralg?style=flat-square) 
+ ![PyPI - Downloads](https://img.shields.io/pypi/dm/neuralg?style=flat-square) 
+
+
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
