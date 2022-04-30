@@ -7,7 +7,7 @@ from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_ModelHandler():
-    """Tests if requesting a model for all supported operations works, 
+    """Tests if requesting a model for all supported operations works,
     and that tracking and clearing models functions as desired.
     """
     # Instantiate a model handler
@@ -55,11 +55,11 @@ def test_ModelHandler():
     try:
         m_not_available = TestModelHandler.get_model(op, 100)
         # assert m_not_available is not None
-    except AssertionError:
+    except ValueError:
         None
     try:
         m_not_available = TestModelHandler.get_model("no_op", 10)
-    except AssertionError:
+    except ValueError:
         None
 
     # Check clearing models work
