@@ -7,6 +7,7 @@ import torch
 from loguru import logger
 import time
 from datetime import datetime
+import numpy as np
 
 
 def run_time_study(d, operation, symmetric=False):
@@ -91,10 +92,10 @@ if __name__ == "__main__":
         }
     )
     ax = fig.add_subplot()
-    ax.plot(torch.arange(3, 20 + 1, 2), batch_results.neuralg, label="neuralg")
-    ax.plot(torch.arange(3, 20 + 1, 2), batch_results.torch, label="torch")
+    ax.plot(np.arange(3, 20 + 1, 2), batch_results.neuralg, label="neuralg")
+    ax.plot(np.arange(3, 20 + 1, 2), batch_results.torch, label="torch")
     ax.set_title("Comutation time per batch, batch size = 100", fontsize=25, c="black")
-    ax.set_xticks(torch.arange(3, 5 + 1, 2))
+    ax.set_xticks(torch.arange(3, 20 + 1, 2))
     ax.set_xlabel("Matrix size", fontsize=18)
     ax.set_ylabel("Time [ms]", fontsize=16)
     ax.legend()
