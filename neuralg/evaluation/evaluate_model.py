@@ -43,7 +43,7 @@ def _get_test_set(test_parameters):
         test_parameters (DotMap): Parameters characterizing the requested matrix data set
 
     Returns:
-        RandomMatrixDataSet: Data set of random matrices 
+        RandomMatrixDataSet: Data set of random matrices
     """
     torch.manual_seed(458)
     return get_sample(test_parameters)
@@ -75,8 +75,9 @@ def _evaluate_svd_model(model, test_set):
     Returns:
         tensor: Relative L1 norm of the difference between predicted and true singular values of the test set matrices
     """
-    singvals = test_set.Y
+    singvals = torch.flip(
+        test_set.Y, dims=[-1]
+    )  # Singular values are sorted in descending order per default so need to be flipped
     predicted_singvals = model(test_set.X)
     assert predicted_singvals is not None, "Evaluation non-succesful"
     return relative_L1_evaluation_error(predicted_singvals, singvals)
-

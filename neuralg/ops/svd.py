@@ -1,3 +1,4 @@
+import torch
 from .. import neuralg_ModelHandler
 from .. import neuralg_SAFEMODE
 from .utils.validate_input import validate_input
@@ -24,4 +25,6 @@ def svd(A, custom_model_name=None, custom_model_class=False):
         "svd", matrix_size, custom_model_name, custom_model_class
     )  # Load the right model via model handler
     out = predict(model, A)  # Evaluate model on input
-    return out
+    return torch.flip(
+        out, dims=[-1]
+    )  # Outputs from trained models are sorted in descending order - want ascending
