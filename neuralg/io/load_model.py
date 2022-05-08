@@ -63,6 +63,9 @@ def load_model(model_name):
         )
         available_models["svd{}".format(d)] = [state_dict_path, "nerf", d]
 
+    assert model_name in available_models, "Model not available, must be in {}".format(
+        list(available_models.keys())
+    )
     model_path, model_type, matrix_size = (x for x in available_models[model_name])
 
     if model_type == "nerf":

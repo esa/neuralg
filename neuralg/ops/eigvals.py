@@ -31,7 +31,7 @@ def eigvals(
             model = neuralg_ModelHandler.get_model(
                 "eigval", matrix_size, custom_model_name, custom_model_class
             )
-        except ValueError:
+        except AssertionError:
             raise NotImplementedError(
                 "Matrix dimension for symmetric eigval operation must be between {} and {}, but had dimension: ".format(
                     MATRIX_SIZES.eig.sym.lower_bound, MATRIX_SIZES.eig.sym.upper_bound
@@ -43,7 +43,7 @@ def eigvals(
             model = neuralg_ModelHandler.get_model(
                 "r_eigval", matrix_size, custom_model_name, custom_model_class
             )
-        except ValueError:
+        except AssertionError:
             raise NotImplementedError(
                 "Matrix dimension for real eigval operation must be between {} and {}, but had dimension: ".format(
                     MATRIX_SIZES.eig.real.lower_bound, MATRIX_SIZES.eig.real.upper_bound
@@ -56,7 +56,7 @@ def eigvals(
             model = neuralg_ModelHandler.get_model(
                 "c_eigval", matrix_size, custom_model_name, custom_model_class
             )
-        except ValueError:
+        except AssertionError:
             raise NotImplementedError(
                 "Matrix dimension for complex eigval operation must be between {} and {}, but had dimension: ".format(
                     MATRIX_SIZES.eig.complex.lower_bound,

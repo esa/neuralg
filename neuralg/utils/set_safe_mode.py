@@ -1,6 +1,4 @@
 from loguru import logger
-from copy import deepcopy
-
 from .. import neuralg_SafeMode
 
 

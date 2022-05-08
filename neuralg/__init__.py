@@ -6,7 +6,7 @@ __version__ = "0.0.11"  # TestPyPi index at the moment
 from .utils.set_log_level import set_log_level
 
 # Set default log level
-set_log_level("INFO")
+set_log_level("WARNING")
 
 from .io.download_models import download_models
 
