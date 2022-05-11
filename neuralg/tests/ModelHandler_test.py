@@ -51,15 +51,15 @@ def test_ModelHandler():
     m_already_loaded = TestModelHandler.get_model("eigval", 3)
     assert len(TestModelHandler.loaded_models) == loaded_model_count
 
-    # Assert that an error is thrown when requesting unavailable model
+    # Assert that an assertion error is thrown when requesting unavailable model
     try:
         m_not_available = TestModelHandler.get_model(op, 100)
         # assert m_not_available is not None
-    except ValueError:
+    except AssertionError:
         None
     try:
         m_not_available = TestModelHandler.get_model("no_op", 10)
-    except ValueError:
+    except AssertionError:
         None
 
     # Check clearing models work
