@@ -7,7 +7,7 @@ from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def test_ModelHandler():
-    """Tests if requesting a model for all supported operations works, 
+    """Tests if requesting a model for all supported operations works,
     and that tracking and clearing models functions as desired.
     """
     # Instantiate a model handler
@@ -51,7 +51,7 @@ def test_ModelHandler():
     m_already_loaded = TestModelHandler.get_model("eigval", 3)
     assert len(TestModelHandler.loaded_models) == loaded_model_count
 
-    # Assert that an error is thrown when requesting unavailable model
+    # Assert that an assertion error is thrown when requesting unavailable model
     try:
         m_not_available = TestModelHandler.get_model(op, 100)
         # assert m_not_available is not None

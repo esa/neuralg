@@ -6,13 +6,13 @@ from ..utils.constants import NEURALG_MATRIX_SIZES as MATRIX_SIZES
 
 
 def load_model(model_name):
-    """ Load a requested model, if available in the module. 
+    """Load a requested model, if available in the module.
 
     Args:
         model_name (str): Name of requested model
 
     Returns:
-        torch.nn : Requested model. Raises assertion if the model name is not known. 
+        torch.nn : Requested model. Raises assertion if the model name is not known.
     """
 
     available_models = DotMap()
@@ -71,11 +71,11 @@ def load_model(model_name):
     if model_type == "nerf":
         assert type(matrix_size) == int
         assert matrix_size > 0
-        model = EigNERF(matrix_size, in_features=matrix_size ** 2)
+        model = EigNERF(matrix_size, in_features=matrix_size**2)
     elif model_type == "complex_nerf":
         assert type(matrix_size) == int
         assert matrix_size > 0
-        model = CEigNERF(matrix_size, in_features=matrix_size ** 2)
+        model = CEigNERF(matrix_size, in_features=matrix_size**2)
     else:
         raise NotImplementedError(
             "Unknown model type.  Available are: " + available_models.keys()

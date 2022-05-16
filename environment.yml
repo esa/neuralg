@@ -10,3 +10,4 @@ dependencies:
 - python>=3.8
 - pytorch>=1.9
 - toml>=0.10.2
+- requests>=2.27.0

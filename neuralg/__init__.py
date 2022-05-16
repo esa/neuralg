@@ -16,8 +16,11 @@ if not os.path.isdir(os.path.dirname(__file__) + "/models/saved_models"):
     _download_models()
 
 
-# Set global safe mode variable to false default
-neuralg_SAFEMODE = False
+# Initalize global safe mode variable and set to false default
+from .utils.SafeMode import SafeMode
+
+neuralg_SafeMode = SafeMode()
+neuralg_SafeMode.set_mode(False)
 
 # Initialize global model handler
 from .utils.ModelHandler import ModelHandler
